@@ -3,6 +3,9 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
+import RegistrePAP from './pages/RegistrePAP';
+import FichePAP from './pages/FichePAP';
+import NouveauPAP from './pages/NouveauPAP';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -36,7 +39,10 @@ function AppRoutes() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
-        {/* Routes à ajouter dans les phases suivantes */}
+        <Route path="/registre" element={<RegistrePAP />} />
+        <Route path="/pap/:code_pap" element={<FichePAP />} />
+        <Route path="/nouveau-pap" element={<NouveauPAP />} />
+        {/* Routes Phase 2+ à ajouter */}
         <Route path="*" element={<div className="main-content"><h1>Page non trouvée</h1></div>} />
       </Route>
     </Routes>
