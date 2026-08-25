@@ -6,6 +6,9 @@ import Dashboard from './pages/Dashboard';
 import RegistrePAP from './pages/RegistrePAP';
 import FichePAP from './pages/FichePAP';
 import NouveauPAP from './pages/NouveauPAP';
+import GestionBiens from './pages/GestionBiens';
+import Evaluations from './pages/Evaluations';
+import Paiements from './pages/Paiements';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -42,7 +45,10 @@ function AppRoutes() {
         <Route path="/registre" element={<RegistrePAP />} />
         <Route path="/pap/:code_pap" element={<FichePAP />} />
         <Route path="/nouveau-pap" element={<NouveauPAP />} />
-        {/* Routes Phase 2+ à ajouter */}
+        <Route path="/biens" element={<GestionBiens />} />
+        <Route path="/evaluations" element={<Evaluations />} />
+        <Route path="/paiements" element={<Paiements />} />
+        {/* Routes Phase 3 à ajouter */}
         <Route path="*" element={<div className="main-content"><h1>Page non trouvée</h1></div>} />
       </Route>
     </Routes>
