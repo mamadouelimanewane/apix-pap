@@ -28,10 +28,11 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) throw new Error('Login failed');
 
-      const userData = await response.json();
-      setUser(userData);
-      localStorage.setItem('apix_pap_user', JSON.stringify(userData));
-      return userData;
+      const { user: userData, token } = await response.json();
+      const fullUserData = { ...userData, token };
+      setUser(fullUserData);
+      localStorage.setItem('apix_pap_user', JSON.stringify(fullUserData));
+      return fullUserData;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
