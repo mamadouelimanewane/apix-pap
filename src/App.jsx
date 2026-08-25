@@ -9,6 +9,8 @@ import NouveauPAP from './pages/NouveauPAP';
 import GestionBiens from './pages/GestionBiens';
 import Evaluations from './pages/Evaluations';
 import Paiements from './pages/Paiements';
+import Documents from './pages/Documents';
+import Reclamations from './pages/Reclamations';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -48,7 +50,9 @@ function AppRoutes() {
         <Route path="/biens" element={<GestionBiens />} />
         <Route path="/evaluations" element={<Evaluations />} />
         <Route path="/paiements" element={<Paiements />} />
-        {/* Routes Phase 3 à ajouter */}
+        <Route path="/documents" element={<Documents />} />
+        <Route path="/reclamations" element={<Reclamations />} />
+        {/* Autres Phase 3: Conciliation, Audit, Portail citoyen */}
         <Route path="*" element={<div className="main-content"><h1>Page non trouvée</h1></div>} />
       </Route>
     </Routes>
