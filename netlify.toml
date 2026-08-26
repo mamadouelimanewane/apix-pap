@@ -4,6 +4,21 @@
   functions = "netlify/functions"
 
 [[redirects]]
+  from = "/api/auth/login"
+  to = "/.netlify/functions/auth-login"
+  status = 200
+
+[[redirects]]
+  from = "/api/pap/list"
+  to = "/.netlify/functions/pap-list"
+  status = 200
+
+[[redirects]]
+  from = "/api/stats/dashboard"
+  to = "/.netlify/functions/dashboard-stats"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
