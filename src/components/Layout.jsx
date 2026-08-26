@@ -2,7 +2,8 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, Users, FileText, DollarSign, AlertCircle,
-  Settings, LogOut, Menu, X, Map, CheckCircle, MessageSquare, History
+  Settings, LogOut, Menu, X, Map, CheckCircle, MessageSquare, History,
+  Download, Upload, Edit2
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -30,7 +31,9 @@ export default function Layout() {
 
   const adminItems = [
     { path: '/audit', icon: History, label: 'Audit Trail' },
-    { path: '/utilisateurs', icon: Users, label: 'Utilisateurs' },
+    { path: '/editions', icon: Edit2, label: 'Éditions' },
+    { path: '/imports', icon: Upload, label: 'Imports' },
+    { path: '/exports', icon: Download, label: 'Exports' },
     { path: '/settings', icon: Settings, label: 'Paramètres' },
   ];
 

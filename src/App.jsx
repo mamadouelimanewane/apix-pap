@@ -14,6 +14,9 @@ import Reclamations from './pages/Reclamations';
 import Conciliation from './pages/Conciliation';
 import AuditTrail from './pages/AuditTrail';
 import PortailCitoyen from './pages/PortailCitoyen';
+import Exports from './pages/Exports';
+import Imports from './pages/Imports';
+import Editions from './pages/Editions';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -53,6 +56,9 @@ function AppRoutes() {
         <Route path="/reclamations" element={user ? <Reclamations /> : <Navigate to="/login" />} />
         <Route path="/conciliation" element={user ? <Conciliation /> : <Navigate to="/login" />} />
         <Route path="/audit" element={user ? <AuditTrail /> : <Navigate to="/login" />} />
+        <Route path="/editions" element={user ? <Editions /> : <Navigate to="/login" />} />
+        <Route path="/exports" element={user ? <Exports /> : <Navigate to="/login" />} />
+        <Route path="/imports" element={user ? <Imports /> : <Navigate to="/login" />} />
       </Route>
 
       {/* Default redirect */}
