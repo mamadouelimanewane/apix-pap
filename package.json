@@ -1,6 +1,6 @@
 {
   "name": "apix-pap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Système de Gestion des PAP (Personnes Affectées par les Projets) - APIX",
   "type": "module",
   "scripts": {
