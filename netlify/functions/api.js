@@ -1,5 +1,13 @@
 exports.handler = async (event, context) => {
-  const path = event.path || event.rawUrl?.split('?')[0] || '/';
+  // Extract path from event - handle both direct calls and redirected calls
+  let path = event.path || '/';
+
+  // If redirected from /api/*, use the original URL
+  if (event.rawUrl) {
+    path = event.rawUrl.split('?')[0];
+  } else if (event.url) {
+    path = new URL(event.url, `http://${event.headers?.host || 'localhost'}`).pathname;
+  }
   const method = event.httpMethod;
   const body = event.body ? JSON.parse(event.body) : {};
 
