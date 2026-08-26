@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Layout from './components/Layout';
@@ -32,6 +33,13 @@ import Recours from './pages/Recours';
 import CompensationKPI from './pages/CompensationKPI';
 import AcquisitionDocuments from './pages/AcquisitionDocuments';
 import RiskAssessment from './pages/RiskAssessment';
+// NEW: Premium Dashboard & Drill-Down Pages
+import DashboardMetierAPIP from './components/DashboardMetierAPIP';
+import { DrillDownPAP, DrillDownCompensation, DrillDownPayment } from './pages/DrillDownPhases';
+// NEW: Notification System
+import { getNotificationSystem } from './services/NotificationService';
+// NEW: Advanced Features
+import AdvancedFeatures from './pages/AdvancedFeatures';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -51,6 +59,15 @@ const PrivateRoute = ({ children }) => {
 
 function AppRoutes() {
   const { user } = useAuth();
+
+  // NEW: Initialiser notification system au démarrage
+  useEffect(() => {
+    if (user) {
+      const notifications = getNotificationSystem();
+      notifications.start();
+      console.log('✅ Notification system started');
+    }
+  }, [user]);
 
   return (
     <Routes>
@@ -89,6 +106,15 @@ function AppRoutes() {
         <Route path="/compensation-kpi" element={user ? <CompensationKPI /> : <Navigate to="/login" />} />
         <Route path="/acquisition-documents" element={user ? <AcquisitionDocuments /> : <Navigate to="/login" />} />
         <Route path="/risk-assessment" element={user ? <RiskAssessment /> : <Navigate to="/login" />} />
+
+        {/* NEW: Premium Dashboard & Drill-Down Routes */}
+        <Route path="/dashboard-metier" element={user ? <DashboardMetierAPIP /> : <Navigate to="/login" />} />
+        <Route path="/drill/phase1" element={user ? <DrillDownPAP /> : <Navigate to="/login" />} />
+        <Route path="/drill/phase3" element={user ? <DrillDownCompensation /> : <Navigate to="/login" />} />
+        <Route path="/drill/phase4" element={user ? <DrillDownPayment /> : <Navigate to="/login" />} />
+
+        {/* NEW: Advanced Features Routes */}
+        <Route path="/advanced-features" element={user ? <AdvancedFeatures /> : <Navigate to="/login" />} />
       </Route>
 
       {/* Default redirect */}

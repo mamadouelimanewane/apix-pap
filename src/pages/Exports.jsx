@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Download, FileText, Sheet3 } from 'lucide-react';
+import { Download, FileText, Table } from 'lucide-react';
 
 export default function Exports() {
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ export default function Exports() {
             gap: '10px'
           }}
         >
-          <Sheet3 size={20} />
+          <Table size={20} />
           Exporter PAP en CSV
         </button>
 
