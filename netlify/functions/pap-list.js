@@ -1,0 +1,31 @@
+exports.handler = async (event, context) => {
+  if (event.httpMethod !== 'GET') {
+    return { statusCode: 405, body: 'Method not allowed' };
+  }
+
+  try {
+    const page = parseInt(event.queryStringParameters?.page || '1');
+    const search = event.queryStringParameters?.search || '';
+
+    // Demo data
+    const allPap = [
+      { id: 1, code_pap: 'PAP-2026-0001', nom: 'Dia', prenom: 'Mamadou', telephone: '221783456789', commune: 'Dakar', statut: 'Payé', montant_valide: 5000000, montant_paye: 5000000 },
+      { id: 2, code_pap: 'PAP-2026-0002', nom: 'Ndiaye', prenom: 'Fatou', telephone: '221781234567', commune: 'Thiès', statut: 'Évalué', montant_valide: 3000000, montant_paye: 0 },
+      { id: 3, code_pap: 'PAP-2026-0003', nom: 'Sow', prenom: 'Ibrahim', telephone: '221789876543', commune: 'Kaolack', statut: 'Nouveau', montant_valide: 0, montant_paye: 0 }
+    ];
+
+    const filtered = search ? allPap.filter(p => p.nom.toLowerCase().includes(search.toLowerCase())) : allPap;
+    const pageSize = 50;
+    const total = filtered.length;
+    const pages = Math.ceil(total / pageSize);
+    const start = (page - 1) * pageSize;
+    const data = filtered.slice(start, start + pageSize);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ data, total, page, pages })
+    };
+  } catch (error) {
+    return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+  }
+};
