@@ -3,6 +3,12 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
+  define: {
+    global: 'globalThis',
+    process: {
+      env: {}
+    }
+  },
   plugins: [react()],
   resolve: {
     alias: {
