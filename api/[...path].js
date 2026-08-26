@@ -275,6 +275,90 @@ export default async (req, res) => {
       });
     }
 
+    // === DOCUMENT STORAGE ===
+    if (path === '/api/documents/upload' && method === 'POST') {
+      return res.json({
+        success: true,
+        url: `https://storage.vercel.com/document_${Date.now()}.jpg`,
+        size: 250000,
+        uploadedAt: new Date().toISOString()
+      });
+    }
+
+    if (path === '/api/documents/s3/presigned' && method === 'POST') {
+      return res.json({
+        presignedUrl: `https://s3.amazonaws.com/apix-pap/document_${Date.now()}?signature=...`,
+        downloadUrl: `https://cdn.apix-pap.com/documents/document_${Date.now()}.jpg`
+      });
+    }
+
+    if (path === '/api/documents/metadata' && method === 'POST') {
+      return res.json({ success: true, id: Date.now() });
+    }
+
+    if (path === '/api/documents/versions' && method === 'POST') {
+      return res.json({ success: true, version: 1 });
+    }
+
+    if (path.startsWith('/api/documents/') && method === 'DELETE') {
+      return res.json({ success: true, deleted: path.split('/').pop() });
+    }
+
+    // === PAP INTEGRATION ===
+    if (path === '/api/pap/create' && method === 'POST') {
+      const body = JSON.parse(req.body || '{}');
+      return res.json({
+        code_pap: `PAP-2026-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`,
+        ...body,
+        id: Date.now(),
+        created_at: new Date().toISOString()
+      });
+    }
+
+    if (path === '/api/cadastre/validate' && method === 'POST') {
+      const body = JSON.parse(req.body || '{}');
+      return res.json({
+        valid: true,
+        confidence: 0.95,
+        cadastreRecord: {
+          numeroLot: body.numeroLot,
+          proprietaire: body.proprietaire,
+          superficie: body.superficie,
+          adresse: 'Dakar Centre',
+          valeur: 12500000
+        },
+        discrepancies: []
+      });
+    }
+
+    if (path === '/api/biens/create' && method === 'POST') {
+      const body = JSON.parse(req.body || '{}');
+      return res.json({
+        code_bien: `BIEN-2026-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`,
+        ...body,
+        id: Date.now(),
+        created_at: new Date().toISOString()
+      });
+    }
+
+    // === RISK ASSESSMENT ===
+    if (path === '/api/risk/calculate' && method === 'POST') {
+      const body = JSON.parse(req.body || '{}');
+      const riskScore = Math.floor(Math.random() * 100);
+      return res.json({
+        riskScore: riskScore,
+        riskLevel: riskScore > 70 ? 'HIGH' : riskScore > 40 ? 'MEDIUM' : 'LOW',
+        factors: [
+          { factor: 'Document Quality', weight: 20, risk: 'LOW' },
+          { factor: 'Cadastre Match', weight: 30, risk: 'LOW' }
+        ],
+        recommendation: {
+          action: riskScore > 70 ? 'REVIEW' : 'APPROVE',
+          message: riskScore > 70 ? 'Examen recommandé' : 'Prêt pour traitement'
+        }
+      });
+    }
+
     return res.status(404).json({ error: 'Route not found' });
   } catch (error) {
     return res.status(500).json({ error: error.message });

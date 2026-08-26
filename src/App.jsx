@@ -31,6 +31,7 @@ import Terrain from './pages/Terrain';
 import Recours from './pages/Recours';
 import CompensationKPI from './pages/CompensationKPI';
 import AcquisitionDocuments from './pages/AcquisitionDocuments';
+import RiskAssessment from './pages/RiskAssessment';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -87,6 +88,7 @@ function AppRoutes() {
         <Route path="/recours" element={user ? <Recours /> : <Navigate to="/login" />} />
         <Route path="/compensation-kpi" element={user ? <CompensationKPI /> : <Navigate to="/login" />} />
         <Route path="/acquisition-documents" element={user ? <AcquisitionDocuments /> : <Navigate to="/login" />} />
+        <Route path="/risk-assessment" element={user ? <RiskAssessment /> : <Navigate to="/login" />} />
       </Route>
 
       {/* Default redirect */}
