@@ -20,16 +20,20 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+      // Demo mode: hardcoded users
+      const users = {
+        'admin@apix.sn': { nom: 'Administrateur', role: 'admin', password: 'password' },
+        'chef@apix.sn': { nom: 'Chef Projet', role: 'chef_projet', password: 'password' },
+        'agent@apix.sn': { nom: 'Agent Terrain', role: 'agent_terrain', password: 'password' }
+      };
 
-      if (!response.ok) throw new Error('Login failed');
+      const user = users[email];
+      if (!user || user.password !== password) {
+        throw new Error('Identifiants incorrects');
+      }
 
-      const { user: userData, token } = await response.json();
-      const fullUserData = { ...userData, token };
+      const token = btoa(JSON.stringify({ email, nom: user.nom, role: user.role }));
+      const fullUserData = { email, nom: user.nom, role: user.role, token };
       setUser(fullUserData);
       localStorage.setItem('apix_pap_user', JSON.stringify(fullUserData));
       return fullUserData;
