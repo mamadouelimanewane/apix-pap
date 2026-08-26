@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigation, Users, MapPin, Calendar, CheckCircle } from 'lucide-react';
 
 export default function Terrain() {
-  const [agents, setAgents] = useState([
-    { id: 1, nom: 'Ndiaye Assane', jour: 'Lundi', papCount: 5, distance: '25km', status: 'En cours' },
-    { id: 2, nom: 'Ba Mohamed', jour: 'Lundi', papCount: 4, distance: '18km', status: 'Complété' },
-    { id: 3, nom: 'Sall Aïssatou', jour: 'Mardi', papCount: 6, distance: '32km', status: 'Planifié' },
-  ]);
+  const [agents, setAgents] = useState([]);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [itineraire, setItineraire] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedAgent, setSelectedAgent] = useState(agents[0]);
-
-  const itineraire = [
-    { heure: '08:30', pap: 'PAP-001', lieu: 'Dakar Centre', nom: 'Dia Mamadou', action: 'Visite', statut: 'Complété' },
-    { heure: '09:15', pap: 'PAP-005', lieu: 'Dakar Centre', nom: 'Ndiaye Aïda', action: 'Signature', statut: 'Complété' },
-    { heure: '10:30', pap: 'PAP-012', lieu: 'Thiès', nom: 'Seck Malick', action: 'Évaluation', statut: 'En cours' },
-    { heure: '12:00', pap: '-', lieu: 'Thiès', nom: 'Pause déjeuner', action: '-', statut: 'En attente' },
-    { heure: '14:00', pap: 'PAP-008', lieu: 'Thiès', nom: 'Fall Ousseynou', action: 'Visite', statut: 'En attente' },
-    { heure: '15:30', pap: 'PAP-015', lieu: 'Thiès', nom: 'Niang Fatou', action: 'Signature', statut: 'En attente' },
-  ];
+  useEffect(() => {
+    fetch('/api/terrain')
+      .then(res => res.json())
+      .then(data => {
+        setAgents(data.agents || []);
+        setItineraire(data.itineraires || []);
+        setSelectedAgent(data.agents?.[0] || null);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement terrain:', err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="page-container">

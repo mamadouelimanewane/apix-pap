@@ -1,22 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DollarSign, Calculator, TrendingUp } from 'lucide-react';
 
 export default function Dedommagement() {
   const [modalite, setModalite] = useState('unique');
   const [selectedPAP, setSelectedPAP] = useState(null);
+  const [bareme, setBareme] = useState([]);
+  const [paps, setPaps] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const paps = [
-    { id: 1, code: 'PAP-2026-001', nom: 'Dia Mamadou', bien: 'Maison', montantCadastre: 12500000, montantOffre: 4500000 },
-    { id: 2, code: 'PAP-2026-002', nom: 'Ndiaye Assane', bien: 'Terrain', montantCadastre: 8000000, montantOffre: 3200000 },
-    { id: 3, code: 'PAP-2026-003', nom: 'Sall Aïssatou', bien: 'Maison+Terrain', montantCadastre: 15000000, montantOffre: 5000000 },
-  ];
-
-  const bareme = [
-    { type: 'Terrain nu', base: 'm² × prix local', montant: '50K-100K/m²' },
-    { type: 'Maison', base: 'Evaluation + 20%', montant: '10-20M' },
-    { type: 'Bétail', base: 'Valeur marché', montant: '500K-1M/tête' },
-    { type: 'Récolte', base: 'Rendement × prix', montant: '2-5M/hectare' },
-  ];
+  useEffect(() => {
+    fetch('/api/dedommagement')
+      .then(res => res.json())
+      .then(data => {
+        setBareme(data.bareme || []);
+        setPaps(data.paps || []);
+        setSelectedPAP(data.paps?.[0] || null);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement dédommagement:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const getEchelonnement = (montant) => {
     const tiers = Math.round(montant / 3);

@@ -5,15 +5,19 @@ export default function Cartographie() {
   const [paps, setPaps] = useState([]);
   const [filter, setFilter] = useState('all');
   const [selectedZone, setSelectedZone] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const mockPaps = [
-      { id: 1, code: 'PAP-2026-001', lat: 14.7125, lng: -17.4676, nom: 'Dia Mamadou', statut: 'Payé', zone: 'Dakar Centre' },
-      { id: 2, code: 'PAP-2026-002', lat: 14.7150, lng: -17.4650, nom: 'Ndiaye Assane', statut: 'Évalué', zone: 'Dakar Centre' },
-      { id: 3, code: 'PAP-2026-003', lat: 14.7200, lng: -17.4600, nom: 'Sall Aïssatou', statut: 'Nouveau', zone: 'Thiès' },
-      { id: 4, code: 'PAP-2026-004', lat: 14.7175, lng: -17.4625, nom: 'Ba Mohamed', statut: 'Payé', zone: 'Dakar Centre' },
-    ];
-    setPaps(mockPaps);
+    fetch('/api/cartographie')
+      .then(res => res.json())
+      .then(data => {
+        setPaps(data.paps || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement cartographie:', err);
+        setLoading(false);
+      });
   }, []);
 
   const getStatusColor = (statut) => {

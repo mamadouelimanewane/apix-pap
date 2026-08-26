@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APIX-PAP - Prévisualisation Fonctionnalités Phase 2</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; color: #006B3F; margin: 30px 0; font-size: 28px; }
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #006B3F;
+        }
+        .feature-card h2 {
+            color: #006B3F;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mockup {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-size: 13px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .map-preview {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 8px;
+            border: 2px dashed #4caf50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2e7d32;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        .map-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .pap { background: #ff6b6b; }
+        .zone { background: rgba(76, 175, 80, 0.2); border: 2px solid #4caf50; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #006B3F;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .pending { background: #fff3cd; color: #856404; }
+        .approved { background: #d4edda; color: #155724; }
+        .paid { background: #d1ecf1; color: #0c5460; }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin: 12px 0;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 12px;
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .stat-box {
+            background: #f0f8f5;
+            border-left: 4px solid #006B3F;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #006B3F;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        .step-number {
+            background: #006B3F;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .arrow { color: #006B3F; font-weight: bold; margin: 0 5px; }
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: 1fr; }
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #006B3F, transparent);
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ APIX-PAP Phase 2 - Prévisualisation Fonctionnalités</h1>
+
+        <!-- CARTOGRAPHIE -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <h2>🗺️ Cartographie Interactive</h2>
+                <p><strong>Route:</strong> /cartographie</p>
+
+                <div class="map-preview" style="position: relative;">
+                    <div style="position: absolute; top: 20%; left: 15%; width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%;" title="PAP"></div>
+                    <div style="position: absolute; top: 35%; left: 30%; width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%;"></div>
+                    <div style="position: absolute; top: 50%; left: 45%; width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%;"></div>
+                    <div style="position: absolute; top: 25%; left: 60%; width: 80px; height: 100px; border: 2px dashed #4caf50; opacity: 0.5;"></div>
+                    <span>Carte Leaflet avec PAP 🔴 et Zones 🟢</span>
+                </div>
+
+                <div class="mockup">
+Fonctionnalités:
+✓ Afficher tous les PAP sur carte
+✓ Zones d'impact projet (polygones)
+✓ Clusters pour densité
+✓ Filtrer par statut (Payé/Évalué/Nouveau)
+✓ Popup avec détails PAP
+✓ Export carte en PDF
+✓ Heatmap densité par zone
+✓ Optimisation routes terrain
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-value">156 PAP</div>
+                    <div class="stat-label">Affichés sur carte • 82% Payés</div>
+                </div>
+            </div>
+
+            <!-- IMPENSÉS -->
+            <div class="feature-card">
+                <h2>💰 Gestion Impensés</h2>
+                <p><strong>Route:</strong> /impenses</p>
+
+                <div class="mockup">
+Workflow Approbation:
+┌─────────────────────────┐
+│ Agent Terrain            │ Soumet impensé
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Chef Projet             │ Valide justification
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Admin                   │ Approuve paiement
+└─────────────────────────┘
+                </div>
+
+                <div class="grid-2">
+                    <div class="stat-box">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Impensés en attente</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">12.5M</div>
+                        <div class="stat-label">Montant total</div>
+                    </div>
+                </div>
+
+                <table>
+                    <tr>
+                        <th>Catégorie</th>
+                        <th>Montant</th>
+                        <th>Statut</th>
+                    </tr>
+                    <tr>
+                        <td>Dommages bâtiment</td>
+                        <td>5.2M</td>
+                        <td><span class="status-badge approved">Approuvé</span></td>
+                    </tr>
+                    <tr>
+                        <td>Arrêt d'activité</td>
+                        <td>3.1M</td>
+                        <td><span class="status-badge pending">En attente</span></td>
+                    </tr>
+                    <tr>
+                        <td>Relocation temporaire</td>
+                        <td>4.2M</td>
+                        <td><span class="status-badge pending">En attente</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- CADASTRE -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <h2>🏛️ Cadastre & Propriété</h2>
+                <p><strong>Route:</strong> /cadastre</p>
+
+                <div class="map-preview" style="position: relative; grid-template-columns: 1fr 1fr;">
+                    <div style="position: absolute; top: 10%; left: 10%; width: 60px; height: 60px; border: 2px solid #2196F3; background: rgba(33, 150, 243, 0.1);"></div>
+                    <div style="position: absolute; top: 35%; left: 35%; width: 60px; height: 60px; border: 2px solid #2196F3; background: rgba(33, 150, 243, 0.1);"></div>
+                    <div style="position: absolute; top: 60%; left: 60%; width: 60px; height: 60px; border: 2px solid #2196F3; background: rgba(33, 150, 243, 0.1);"></div>
+                    <span>Parcelles cadastrales 📍</span>
+                </div>
+
+                <div class="mockup">
+Données Cadastre:
+• Numéro parcelle: RT-001-456
+• Propriétaire: Dia Mamadou
+• Superficie: 500 m²
+• Valeur estimée: 12.5M FCFA
+• Titre: Titré régulier ✓
+• Documents: 3 fichiers
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-value">156/156</div>
+                    <div class="stat-label">Parcelles importées du cadastre</div>
+                </div>
+            </div>
+
+            <!-- DÉDOMMAGEMENT -->
+            <div class="feature-card">
+                <h2>💵 Dédommagement & Compensation</h2>
+                <p><strong>Route:</strong> /dedommagement</p>
+
+                <div class="form-group">
+                    <label>💡 Barème de Compensation</label>
+                    <table style="font-size: 11px;">
+                        <tr>
+                            <th>Type Bien</th>
+                            <th>Base Calcul</th>
+                            <th>Montant</th>
+                        </tr>
+                        <tr>
+                            <td>Terrain nu</td>
+                            <td>m² × prix local</td>
+                            <td>50K-100K/m²</td>
+                        </tr>
+                        <tr>
+                            <td>Maison</td>
+                            <td>Evaluation + 20%</td>
+                            <td>10-20M</td>
+                        </tr>
+                        <tr>
+                            <td>Bétail</td>
+                            <td>Valeur marché</td>
+                            <td>500K-1M/tête</td>
+                        </tr>
+                        <tr>
+                            <td>Récolte</td>
+                            <td>Rendement × prix</td>
+                            <td>2-5M/hectare</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label>📋 Modalités Paiement</label>
+                    <div style="display: flex; gap: 10px; margin: 8px 0;">
+                        <button style="flex: 1; padding: 8px; background: #006B3F; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Versement Unique</button>
+                        <button style="flex: 1; padding: 8px; background: #e0e0e0; color: #333; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Échelonné (3 fois)</button>
+                        <button style="flex: 1; padding: 8px; background: #e0e0e0; color: #333; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Rente (annuel)</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>📊 Suivi Paiement</label>
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <span>Paiement initié</span>
+                        <span class="arrow">→</span>
+                        <span>10.01.2026</span>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <span>Confirmation bancaire</span>
+                        <span class="arrow">→</span>
+                        <span>15.01.2026</span>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <span>Reçu signé</span>
+                        <span class="arrow">→</span>
+                        <span>16.01.2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- PLANNING TRAVAUX -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <h2>🏗️ Planning Travaux & Chantier</h2>
+                <p><strong>Route:</strong> /travaux</p>
+
+                <div class="mockup">
+Phases du Projet:
+Phase 1 [■■■■■-----] 100% (Août-Sept)
+ → Terrassement, fondations
+
+Phase 2 [■■■--------] 50% (Sept-Oct)
+ → Construction bâtiments
+
+Phase 3 [--------] 0% (Oct-Nov)
+ → Routes, raccordements
+
+Phase 4 [--------] 0% (Nov-Dec)
+ → Finitions, tests
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Photos du chantier • 3 incidents</div>
+                </div>
+            </div>
+
+            <!-- ROUTES OPTIMISÉES -->
+            <div class="feature-card">
+                <h2>🚗 Routes & Terrain</h2>
+                <p><strong>Route:</strong> /terrain/routes</p>
+
+                <div class="mockup">
+Optimisation Visites:
+Agent: Ndiaye Assane
+Jour: Lundi 26.08
+
+🏠 08:30 - PAP-001 (Dakar)
+🏠 09:15 - PAP-005 (Dakar)
+🏠 10:30 - PAP-012 (Thiès)
+🏠 12:00 - Déjeuner
+🏠 14:00 - PAP-008 (Thiès)
+🏠 15:30 - PAP-015 (Thiès)
+
+Total: 5 PAP • 2h30 route
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%;">60% complété</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- APPELS & RECOURS -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <h2>⚖️ Appels & Recours</h2>
+                <p><strong>Route:</strong> /recours</p>
+
+                <div class="mockup">
+Mécanisme de Contestation:
+┌──────────────────────────┐
+│ PAP conteste montant     │
+└────────────┬─────────────┘
+             ↓
+┌──────────────────────────┐
+│ Commission locale        │ Re-évalue
+└────────────┬─────────────┘
+             ↓
+┌──────────────────────────┐
+│ Décision                 │ Accord nouveau
+└──────────────────────────┘
+
+Délai: 30 jours max
+Taux appel: 8% des PAP
+                </div>
+            </div>
+
+            <!-- KPI COMPENSATION -->
+            <div class="feature-card">
+                <h2>📊 KPI Compensation</h2>
+                <p><strong>Route:</strong> /compensation-kpi</p>
+
+                <div class="grid-2">
+                    <div class="stat-box">
+                        <div class="stat-value">125/156</div>
+                        <div class="stat-label">PAP Payés (80%)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">580M</div>
+                        <div class="stat-label">Montant payé</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4.6M</div>
+                        <div class="stat-label">Montant moyen</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">18 jours</div>
+                        <div class="stat-label">Délai moyen</div>
+                    </div>
+                </div>
+
+                <div class="mockup">
+Comparaison Cadastre vs Offre:
+PAP moyenne: 12.5M (cadastre)
+Offre moyenne: 4.6M (-63%)
+⚠️ Risque social élevé
+🔴 Dakar: -75% (majorité conflits)
+🟢 Kaolack: -45% (moins de tensions)
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

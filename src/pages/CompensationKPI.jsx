@@ -1,45 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, AlertTriangle, MapPin } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function CompensationKPI() {
   const [selectedRegion, setSelectedRegion] = useState('all');
+  const [kpiData, setKpiData] = useState({});
+  const [distributionData, setDistributionData] = useState([]);
+  const [comparisonData, setComparisonData] = useState([]);
+  const [timelineData, setTimelineData] = useState([]);
+  const [regionData, setRegionData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const kpiData = {
-    paps_total: 156,
-    paps_payes: 125,
-    paps_paye_pct: 80,
-    montant_total: 580000000,
-    montant_moyen: 4600000,
-    montant_paye: 580000000,
-    delai_moyen: 18,
-  };
+  useEffect(() => {
+    fetch('/api/compensation-kpi')
+      .then(res => res.json())
+      .then(data => {
+        setKpiData(data.kpi || {});
+        setRegionData(data.distribution || []);
+        setTimelineData(data.timeline || []);
 
-  const distributionData = [
-    { name: 'Dakar', value: 65, pct: 42 },
-    { name: 'Thiès', value: 45, pct: 29 },
-    { name: 'Kaolack', value: 46, pct: 29 },
-  ];
+        // Construire les données pour les charts
+        setDistributionData(
+          (data.distribution || []).map(r => ({
+            name: r.region,
+            value: r.papes,
+            pct: Math.round((r.papes / 156) * 100)
+          }))
+        );
 
-  const comparisonData = [
-    { region: 'Dakar', cadastre: 12500, offre: 3100, ecart: -75 },
-    { region: 'Thiès', cadastre: 9200, offre: 5050, ecart: -45 },
-    { region: 'Kaolack', cadastre: 8800, offre: 5280, ecart: -40 },
-  ];
+        setComparisonData(
+          (data.distribution || []).map(r => ({
+            region: r.region,
+            cadastre: Math.round(r.cadast / 1000000),
+            offre: Math.round(r.montant / 1000000),
+            ecart: Math.round(((r.montant - r.cadast) / r.cadast) * 100)
+          }))
+        );
 
-  const timelineData = [
-    { jour: 'Sem 1', papes: 15, montant: 45000000 },
-    { jour: 'Sem 2', papes: 22, montant: 88000000 },
-    { jour: 'Sem 3', papes: 31, montant: 142000000 },
-    { jour: 'Sem 4', papes: 28, montant: 138000000 },
-    { jour: 'Sem 5', papes: 29, montant: 167000000 },
-  ];
-
-  const regionData = [
-    { nom: 'Dakar', papes: 65, payes: 52, pct: 80, montant: 240000000, cadast: 812000000, risque: '🔴 Critique' },
-    { nom: 'Thiès', papes: 45, payes: 40, pct: 89, montant: 200000000, cadast: 414000000, risque: '🟡 Modéré' },
-    { nom: 'Kaolack', papes: 46, payes: 33, pct: 72, montant: 140000000, cadast: 404000000, risque: '🟢 Faible' },
-  ];
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement compensation KPI:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const COLORS = ['#006B3F', '#2196f3', '#ff9800'];
 

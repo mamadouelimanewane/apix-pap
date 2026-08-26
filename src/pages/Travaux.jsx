@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Hammer, Calendar, AlertCircle, Camera } from 'lucide-react';
 
 export default function Travaux() {
-  const [phases, setPhases] = useState([
-    { id: 1, nom: 'Terrassement', progression: 100, datedebut: '01.08.2026', datefin: '30.09.2026', statut: 'Complété' },
-    { id: 2, nom: 'Fondations & Structures', progression: 50, datedebut: '15.09.2026', datefin: '31.10.2026', statut: 'En cours' },
-    { id: 3, nom: 'Routes & Raccordements', progression: 0, datedebut: '01.11.2026', datefin: '15.12.2026', statut: 'Planifié' },
-    { id: 4, nom: 'Finitions & Tests', progression: 0, datedebut: '01.12.2026', datefin: '31.12.2026', statut: 'Planifié' },
-  ]);
+  const [phases, setPhases] = useState([]);
+  const [incidents, setIncidents] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [incidents, setIncidents] = useState([
-    { id: 1, date: '15.07.2026', type: 'Retard', description: 'Livraison matériaux retardée de 5 jours', impact: 'Modéré' },
-    { id: 2, date: '22.07.2026', type: 'Dommages', description: 'Dégâts à infrastructure existante', impact: 'Critique' },
-    { id: 3, date: '28.07.2026', type: 'Accident', description: 'Incident mineur sur le chantier', impact: 'Faible' },
-  ]);
-
-  const [photos, setPhotos] = useState([
-    { id: 1, date: '20.07.2026', caption: 'Phase 1 - Jour 1' },
-    { id: 2, date: '25.07.2026', caption: 'Phase 1 - Progression' },
-    { id: 3, date: '30.07.2026', caption: 'Phase 1 - Complétion' },
-  ]);
+  useEffect(() => {
+    fetch('/api/travaux')
+      .then(res => res.json())
+      .then(data => {
+        setPhases(data.phases || []);
+        setIncidents(data.incidents || []);
+        setPhotos([...Array(data.photos || 3)].map((_, i) => ({ id: i + 1, date: '20.07.2026', caption: `Photo ${i + 1}` })));
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement travaux:', err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="page-container">

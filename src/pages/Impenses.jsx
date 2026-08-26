@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TrendingUp, Plus, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 export default function Impenses() {
-  const [impenses, setImpenses] = useState([
-    { id: 1, categorie: 'Dommages bâtiment', montant: 5200000, statut: 'Approuvé', date: '2026-07-15', agent: 'Ndiaye Assane', justification: 'Dégâts aux fondations' },
-    { id: 2, categorie: 'Arrêt d\'activité', montant: 3100000, statut: 'En attente', date: '2026-07-20', agent: 'Ba Mohamed', justification: 'Interruption commerce 3 mois' },
-    { id: 3, categorie: 'Relocation temporaire', montant: 4200000, statut: 'En attente', date: '2026-07-22', agent: 'Sall Aïssatou', justification: 'Frais d\'hébergement' },
-    { id: 4, categorie: 'Perte récolte', montant: 2800000, statut: 'Rejeté', date: '2026-07-10', agent: 'Dia Mamadou', justification: 'Documentation insuffisante' },
-  ]);
-
+  const [impenses, setImpenses] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/impenses')
+      .then(res => res.json())
+      .then(data => {
+        setImpenses(data.impenses || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement impensés:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const getStatusIcon = (statut) => {
     switch (statut) {

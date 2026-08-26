@@ -1,47 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scale, AlertCircle, Calendar, FileText } from 'lucide-react';
 
 export default function Recours() {
-  const [recours, setRecours] = useState([
-    {
-      id: 1,
-      code: 'REC-2026-001',
-      pap: 'PAP-2026-001',
-      nom: 'Dia Mamadou',
-      dateReclamation: '15.07.2026',
-      motif: 'Sous-évaluation montant',
-      montantRevendique: 12500000,
-      montantOffre: 4500000,
-      statut: 'Commission en cours',
-      delaiRestant: '12 jours'
-    },
-    {
-      id: 2,
-      code: 'REC-2026-002',
-      pap: 'PAP-2026-005',
-      nom: 'Ndiaye Assane',
-      dateReclamation: '18.07.2026',
-      motif: 'Non-reconnaissance bien',
-      montantRevendique: 8000000,
-      montantOffre: 2500000,
-      statut: 'Décision rendue',
-      delaiRestant: '0 jours'
-    },
-    {
-      id: 3,
-      code: 'REC-2026-003',
-      pap: 'PAP-2026-012',
-      nom: 'Sall Aïssatou',
-      dateReclamation: '22.07.2026',
-      motif: 'Erreur identification bien',
-      montantRevendique: 5000000,
-      montantOffre: 3200000,
-      statut: 'Appel déposé',
-      delaiRestant: '25 jours'
-    },
-  ]);
+  const [recours, setRecours] = useState([]);
+  const [selectedRecours, setSelectedRecours] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedRecours, setSelectedRecours] = useState(recours[0]);
+  useEffect(() => {
+    fetch('/api/recours')
+      .then(res => res.json())
+      .then(data => {
+        setRecours(data.recours || []);
+        setSelectedRecours(data.recours?.[0] || null);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement recours:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const getStatusColor = (statut) => {
     switch (statut) {

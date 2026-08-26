@@ -5,41 +5,19 @@ export default function Cadastre() {
   const [parcelles, setParcelles] = useState([]);
   const [searchNumerro, setSearchNumerro] = useState('');
   const [selectedParcelle, setSelectedParcelle] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const mockParcelles = [
-      {
-        id: 1,
-        numero: 'RT-001-456',
-        proprietaire: 'Dia Mamadou',
-        superficie: 500,
-        valeur: 12500000,
-        titre: 'Titré régulier',
-        documents: 3,
-        statut: 'Validé'
-      },
-      {
-        id: 2,
-        numero: 'RT-001-457',
-        proprietaire: 'Ndiaye Assane',
-        superficie: 350,
-        valeur: 8750000,
-        titre: 'Titré régulier',
-        documents: 2,
-        statut: 'Validé'
-      },
-      {
-        id: 3,
-        numero: 'RT-002-123',
-        proprietaire: 'Sall Aïssatou',
-        superficie: 750,
-        valeur: 15000000,
-        titre: 'Immatriculé',
-        documents: 4,
-        statut: 'À vérifier'
-      },
-    ];
-    setParcelles(mockParcelles);
+    fetch('/api/cadastre')
+      .then(res => res.json())
+      .then(data => {
+        setParcelles(data.parcelles || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur chargement cadastre:', err);
+        setLoading(false);
+      });
   }, []);
 
   const filtered = searchNumerro
