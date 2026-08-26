@@ -232,3 +232,6 @@ Pour questions/blocages, consulter:
 ---
 
 **Next**: Continuer Phase 2 (Registre PAP + Fiches) 🚀
+
+
+# APIX-PAP v1.0.2 - Force Complete Rebuild
