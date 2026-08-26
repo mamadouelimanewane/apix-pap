@@ -40,6 +40,9 @@ import { DrillDownPAP, DrillDownCompensation, DrillDownPayment } from './pages/D
 import { getNotificationSystem } from './services/NotificationService';
 // NEW: Advanced Features
 import AdvancedFeatures from './pages/AdvancedFeatures';
+// NEW: Portal Redesigned
+import PortalHome from './pages/PortalHome';
+import DashboardMetierRedesigned from './pages/DashboardMetierRedesigned';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -77,7 +80,9 @@ function AppRoutes() {
 
       {/* Protected routes */}
       <Route element={user ? <Layout /> : <Navigate to="/login" />}>
-        <Route path="/" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+        {/* NEW: Portal home as default */}
+        <Route path="/" element={user ? <PortalHome /> : <Navigate to="/login" />} />
+        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/registre" element={user ? <RegistrePAP /> : <Navigate to="/login" />} />
         <Route path="/pap/:code_pap" element={user ? <FichePAP /> : <Navigate to="/login" />} />
         <Route path="/nouveau-pap" element={user ? <NouveauPAP /> : <Navigate to="/login" />} />
@@ -108,7 +113,9 @@ function AppRoutes() {
         <Route path="/risk-assessment" element={user ? <RiskAssessment /> : <Navigate to="/login" />} />
 
         {/* NEW: Premium Dashboard & Drill-Down Routes */}
-        <Route path="/dashboard-metier" element={user ? <DashboardMetierAPIP /> : <Navigate to="/login" />} />
+        <Route path="/portal" element={user ? <PortalHome /> : <Navigate to="/login" />} />
+        <Route path="/dashboard-metier" element={user ? <DashboardMetierRedesigned /> : <Navigate to="/login" />} />
+        <Route path="/dashboard-metier-classic" element={user ? <DashboardMetierAPIP /> : <Navigate to="/login" />} />
         <Route path="/drill/phase1" element={user ? <DrillDownPAP /> : <Navigate to="/login" />} />
         <Route path="/drill/phase3" element={user ? <DrillDownCompensation /> : <Navigate to="/login" />} />
         <Route path="/drill/phase4" element={user ? <DrillDownPayment /> : <Navigate to="/login" />} />
