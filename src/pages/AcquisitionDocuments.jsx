@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { Camera, Upload, FileText, CheckCircle, AlertCircle, Download, Zap } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Camera, Upload, FileText, CheckCircle, AlertCircle, Download, Zap, Loader } from 'lucide-react';
+import { performOCR, validateExtraction, estimateOCRQuality } from '../utils/ocrEngine';
 
 export default function AcquisitionDocuments() {
   const [mode, setMode] = useState('upload'); // 'camera' ou 'upload'
@@ -115,80 +116,49 @@ export default function AcquisitionDocuments() {
   const processDocument = async (imageData) => {
     setProcessing(true);
     try {
-      // Simulation OCR (dans prod: Google Vision API, Tesseract.js, ou AWS Textract)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Exécuter OCR réel avec moteur d'extraction
+      const extractedData = await performOCR(imageData, documentType);
 
-      const mockExtraction = {
-        cni: {
-          nom: 'DIA',
-          prenom: 'Mamadou',
-          date_naissance: '15.01.1985',
-          numero: '0012345678901',
-          date_emission: '10.06.2020',
-          date_expiration: '09.06.2030',
-          sexe: 'M',
-          lieu_naissance: 'Dakar'
-        },
-        passport: {
-          nom: 'NDIAYE',
-          prenom: 'Fatou',
-          nationalite: 'Sénégalaise',
-          numero: 'S0123456789',
-          date_emission: '20.03.2021',
-          date_expiration: '19.03.2031'
-        },
-        titre_propriete: {
-          numero_parcelle: 'RT-001-456',
-          proprietaire: 'Dia Mamadou',
-          superficie: '500 m²',
-          adresse: 'Dakar Centre',
-          date_acquisition: '15.05.2015',
-          valeur_estimee: '12.5M FCFA'
-        },
-        bail: {
-          locataire: 'Ba Mohamed',
-          bailleur: 'Sall Aïssatou',
-          adresse: 'Thiès',
-          montant_loyer: '150.000 FCFA',
-          date_debut: '01.01.2024',
-          duree: '12 mois'
-        },
-        attestation: {
-          nom: 'Fall Ousseynou',
-          adresse: 'Kaolack',
-          date_emission: '26.08.2026',
-          delivrant: 'Mairie Kaolack'
-        },
-        facture: {
-          numero: 'FAC-2026-0045',
-          date: '20.08.2026',
-          montant: '850.000 FCFA',
-          beneficiaire: 'Ndiaye Assane',
-          motif: 'Travaux rénovation'
-        }
-      };
+      // Valider les données extraites
+      const validation = validateExtraction(extractedData, documentType);
 
-      const extracted = mockExtraction[documentType] || {};
-      setExtractedData(extracted);
+      // Estimer qualité OCR
+      const ocrQuality = estimateOCRQuality(JSON.stringify(extractedData), imageData);
+
+      setExtractedData(extractedData);
 
       const docName = `${documentType}_${new Date().toISOString().slice(0, 10)}`;
-      setDocuments([
-        ...documents,
-        {
-          id: Date.now(),
-          name: docName,
-          type: documentType,
-          date: new Date().toLocaleDateString('fr-FR'),
-          quality: quality,
-          data: extracted,
-          image: imageData
-        }
-      ]);
+      const newDoc = {
+        id: Date.now(),
+        name: docName,
+        type: documentType,
+        date: new Date().toLocaleDateString('fr-FR'),
+        quality: {
+          ...quality,
+          ocr: ocrQuality
+        },
+        data: extractedData,
+        validation: validation,
+        image: imageData,
+        status: validation.valid ? 'success' : 'warning'
+      };
+
+      setDocuments([...documents, newDoc]);
+
+      // Sauvegarder en base si valide
+      if (validation.valid) {
+        await fetch('/api/documents/ocr', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newDoc)
+        }).catch(err => console.warn('Sauvegarde OCR:', err));
+      }
 
       setProcessing(false);
     } catch (error) {
       console.error('Erreur OCR:', error);
       setProcessing(false);
+      alert('❌ Erreur OCR: ' + error.message);
     }
   };
 
@@ -395,30 +365,69 @@ export default function AcquisitionDocuments() {
                       </div>
                     </div>
 
-                    {/* Qualité */}
+                    {/* Qualité + OCR */}
                     <div style={{ fontSize: '12px', marginBottom: '1rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontWeight: '600' }}>
-                        <span>Score Qualité</span>
-                        <span style={{ color: getQualityColor(doc.quality.resolution) }}>
-                          {Math.round((doc.quality.resolution + doc.quality.lighting + doc.quality.clarity + doc.quality.tilt) / 4)}%
+                        <span>Score Qualité Globale</span>
+                        <span style={{ color: getQualityColor(Math.round((doc.quality.resolution + doc.quality.lighting + doc.quality.clarity + doc.quality.tilt + (doc.quality.ocr || 0)) / 5)) }}>
+                          {Math.round((doc.quality.resolution + doc.quality.lighting + doc.quality.clarity + doc.quality.tilt + (doc.quality.ocr || 0)) / 5)}%
                         </span>
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
-                        {['resolution', 'lighting', 'clarity', 'tilt'].map(metric => (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.5rem' }}>
+                        {['resolution', 'lighting', 'clarity', 'tilt', 'ocr'].map(metric => (
                           <div key={metric} style={{
                             background: '#f5f5f5',
                             padding: '0.5rem',
                             borderRadius: '4px',
                             textAlign: 'center'
                           }}>
-                            <div style={{ fontSize: '10px', color: '#666' }}>{metric}</div>
-                            <div style={{ fontWeight: '600', color: getQualityColor(doc.quality[metric]) }}>
-                              {doc.quality[metric]}%
+                            <div style={{ fontSize: '9px', color: '#666', textTransform: 'uppercase' }}>
+                              {metric === 'ocr' ? 'OCR' : metric.slice(0, 3)}
+                            </div>
+                            <div style={{ fontWeight: '600', color: getQualityColor(doc.quality[metric] || doc.quality.ocr) }}>
+                              {doc.quality[metric] || doc.quality.ocr}%
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
+
+                    {/* Validation */}
+                    {doc.validation && (
+                      <div style={{ marginBottom: '1rem' }}>
+                        {doc.validation.errors.length > 0 && (
+                          <div style={{
+                            background: '#f8d7da',
+                            border: '1px solid #f5c6cb',
+                            color: '#721c24',
+                            padding: '0.75rem',
+                            borderRadius: '4px',
+                            marginBottom: '0.5rem',
+                            fontSize: '11px'
+                          }}>
+                            <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>❌ Erreurs:</div>
+                            {doc.validation.errors.map((err, i) => (
+                              <div key={i}>• {err}</div>
+                            ))}
+                          </div>
+                        )}
+                        {doc.validation.warnings.length > 0 && (
+                          <div style={{
+                            background: '#fff3cd',
+                            border: '1px solid #ffeeba',
+                            color: '#856404',
+                            padding: '0.75rem',
+                            borderRadius: '4px',
+                            fontSize: '11px'
+                          }}>
+                            <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>⚠️ Avertissements:</div>
+                            {doc.validation.warnings.map((warn, i) => (
+                              <div key={i}>• {warn}</div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Actions */}
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
