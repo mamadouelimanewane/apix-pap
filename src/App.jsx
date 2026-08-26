@@ -43,6 +43,8 @@ import AdvancedFeatures from './pages/AdvancedFeatures';
 // NEW: Portal Redesigned
 import PortalHome from './pages/PortalHome';
 import DashboardMetierRedesigned from './pages/DashboardMetierRedesigned';
+// NEW: Portal Hub APIX-PAP (Like apix-phi)
+import PortalHubAPIP from './pages/PortalHubAPIP';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -80,8 +82,8 @@ function AppRoutes() {
 
       {/* Protected routes */}
       <Route element={user ? <Layout /> : <Navigate to="/login" />}>
-        {/* NEW: Portal home as default */}
-        <Route path="/" element={user ? <PortalHome /> : <Navigate to="/login" />} />
+        {/* NEW: Portal Hub like apix-phi (default home) */}
+        <Route path="/" element={user ? <PortalHubAPIP /> : <Navigate to="/login" />} />
         <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/registre" element={user ? <RegistrePAP /> : <Navigate to="/login" />} />
         <Route path="/pap/:code_pap" element={user ? <FichePAP /> : <Navigate to="/login" />} />
@@ -112,8 +114,9 @@ function AppRoutes() {
         <Route path="/acquisition-documents" element={user ? <AcquisitionDocuments /> : <Navigate to="/login" />} />
         <Route path="/risk-assessment" element={user ? <RiskAssessment /> : <Navigate to="/login" />} />
 
-        {/* NEW: Premium Dashboard & Drill-Down Routes */}
-        <Route path="/portal" element={user ? <PortalHome /> : <Navigate to="/login" />} />
+        {/* NEW: Portal & Dashboard Routes */}
+        <Route path="/portal" element={user ? <PortalHubAPIP /> : <Navigate to="/login" />} />
+        <Route path="/portal-legacy" element={user ? <PortalHome /> : <Navigate to="/login" />} />
         <Route path="/dashboard-metier" element={user ? <DashboardMetierRedesigned /> : <Navigate to="/login" />} />
         <Route path="/dashboard-metier-classic" element={user ? <DashboardMetierAPIP /> : <Navigate to="/login" />} />
         <Route path="/drill/phase1" element={user ? <DrillDownPAP /> : <Navigate to="/login" />} />
