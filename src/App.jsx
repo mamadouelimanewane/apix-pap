@@ -80,10 +80,11 @@ function AppRoutes() {
       <Route path="/portail-citoyen" element={<PortailCitoyen />} />
       <Route path="/login" element={<Login />} />
 
-      {/* Protected routes */}
+      {/* Portal Hub - without sidebar */}
+      <Route path="/" element={user ? <PortalHubAPIP /> : <Navigate to="/login" />} />
+
+      {/* Protected routes with Layout */}
       <Route element={user ? <Layout /> : <Navigate to="/login" />}>
-        {/* NEW: Portal Hub like apix-phi (default home) */}
-        <Route path="/" element={user ? <PortalHubAPIP /> : <Navigate to="/login" />} />
         <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/registre" element={user ? <RegistrePAP /> : <Navigate to="/login" />} />
         <Route path="/pap/:code_pap" element={user ? <FichePAP /> : <Navigate to="/login" />} />
@@ -114,8 +115,7 @@ function AppRoutes() {
         <Route path="/acquisition-documents" element={user ? <AcquisitionDocuments /> : <Navigate to="/login" />} />
         <Route path="/risk-assessment" element={user ? <RiskAssessment /> : <Navigate to="/login" />} />
 
-        {/* NEW: Portal & Dashboard Routes */}
-        <Route path="/portal" element={user ? <PortalHubAPIP /> : <Navigate to="/login" />} />
+        {/* NEW: Portal Legacy & Dashboard Routes */}
         <Route path="/portal-legacy" element={user ? <PortalHome /> : <Navigate to="/login" />} />
         <Route path="/dashboard-metier" element={user ? <DashboardMetierRedesigned /> : <Navigate to="/login" />} />
         <Route path="/dashboard-metier-classic" element={user ? <DashboardMetierAPIP /> : <Navigate to="/login" />} />
