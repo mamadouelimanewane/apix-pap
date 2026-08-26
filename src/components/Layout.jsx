@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, FileText, DollarSign, AlertCircle,
   Settings, LogOut, Menu, X, Map, CheckCircle, MessageSquare, History,
   Download, Upload, Edit2, Bell, BarChart3, Search, HardDrive, Webhook,
-  MapPin, Layers, TrendingUp, Briefcase, Hammer, Navigation, Scale
+  MapPin, Layers, TrendingUp, Briefcase, Hammer, Navigation, Scale, Zap
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -36,6 +36,7 @@ export default function Layout() {
     { path: '/terrain', icon: Navigation, label: 'Terrain' },
     { path: '/recours', icon: Scale, label: 'Recours' },
     { path: '/compensation-kpi', icon: BarChart3, label: 'Compensation KPI' },
+    { path: '/acquisition-documents', icon: Zap, label: 'Documents OCR' },
   ];
 
   const adminItems = [

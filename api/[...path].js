@@ -246,6 +246,35 @@ export default async (req, res) => {
       });
     }
 
+    // === ACQUISITION DOCUMENTS OCR ===
+    if (path === '/api/documents/ocr' && method === 'POST') {
+      const body = JSON.parse(req.body || '{}');
+      return res.json({
+        id: Date.now(),
+        name: body.documentType,
+        date: new Date().toISOString(),
+        quality: {
+          resolution: Math.random() * 20 + 80,
+          lighting: Math.random() * 20 + 80,
+          clarity: Math.random() * 20 + 80,
+          tilt: Math.random() * 20 + 80
+        },
+        data: body.extractedData || {},
+        status: 'success'
+      });
+    }
+
+    if (path === '/api/documents/ocr/list' && method === 'GET') {
+      return res.json({
+        documents: [
+          { id: 1, name: 'cni_2026-08-20', type: 'cni', date: '2026-08-20', quality: 88 },
+          { id: 2, name: 'titre_propriete_2026-08-19', type: 'titre_propriete', date: '2026-08-19', quality: 92 },
+          { id: 3, name: 'passport_2026-08-15', type: 'passport', date: '2026-08-15', quality: 85 }
+        ],
+        total: 3
+      });
+    }
+
     return res.status(404).json({ error: 'Route not found' });
   } catch (error) {
     return res.status(500).json({ error: error.message });
