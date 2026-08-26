@@ -1,11 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "env": {
-    "DATABASE_URL": "@DATABASE_URL",
-    "JWT_SECRET": "@JWT_SECRET",
-    "RESEND_API_KEY": "@RESEND_API_KEY"
-  },
   "functions": {
     "api/**/*.js": {
       "memory": 1024,
