@@ -17,6 +17,11 @@ import PortailCitoyen from './pages/PortailCitoyen';
 import Exports from './pages/Exports';
 import Imports from './pages/Imports';
 import Editions from './pages/Editions';
+import Notifications from './pages/Notifications';
+import Rapports from './pages/Rapports';
+import Search from './pages/Search';
+import Backup from './pages/Backup';
+import Webhooks from './pages/Webhooks';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -59,6 +64,11 @@ function AppRoutes() {
         <Route path="/editions" element={user ? <Editions /> : <Navigate to="/login" />} />
         <Route path="/exports" element={user ? <Exports /> : <Navigate to="/login" />} />
         <Route path="/imports" element={user ? <Imports /> : <Navigate to="/login" />} />
+        <Route path="/notifications" element={user ? <Notifications /> : <Navigate to="/login" />} />
+        <Route path="/rapports" element={user ? <Rapports /> : <Navigate to="/login" />} />
+        <Route path="/search" element={user ? <Search /> : <Navigate to="/login" />} />
+        <Route path="/backup" element={user ? <Backup /> : <Navigate to="/login" />} />
+        <Route path="/webhooks" element={user ? <Webhooks /> : <Navigate to="/login" />} />
       </Route>
 
       {/* Default redirect */}

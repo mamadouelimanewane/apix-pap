@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, Users, FileText, DollarSign, AlertCircle,
   Settings, LogOut, Menu, X, Map, CheckCircle, MessageSquare, History,
-  Download, Upload, Edit2
+  Download, Upload, Edit2, Bell, BarChart3, Search, HardDrive, Webhook
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -34,6 +34,11 @@ export default function Layout() {
     { path: '/editions', icon: Edit2, label: 'Éditions' },
     { path: '/imports', icon: Upload, label: 'Imports' },
     { path: '/exports', icon: Download, label: 'Exports' },
+    { path: '/notifications', icon: Bell, label: 'Notifications' },
+    { path: '/rapports', icon: BarChart3, label: 'Rapports' },
+    { path: '/search', icon: Search, label: 'Recherche' },
+    { path: '/backup', icon: HardDrive, label: 'Backup' },
+    { path: '/webhooks', icon: Webhook, label: 'Webhooks' },
     { path: '/settings', icon: Settings, label: 'Paramètres' },
   ];
 
