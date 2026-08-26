@@ -4,19 +4,10 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/api/auth/login"
-  to = "/.netlify/functions/auth-login"
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
   status = 200
-
-[[redirects]]
-  from = "/api/pap/list"
-  to = "/.netlify/functions/pap-list"
-  status = 200
-
-[[redirects]]
-  from = "/api/stats/dashboard"
-  to = "/.netlify/functions/dashboard-stats"
-  status = 200
+  force = false
 
 [[redirects]]
   from = "/*"
