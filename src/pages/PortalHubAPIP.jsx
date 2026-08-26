@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   Users, FileText, DollarSign, AlertCircle, BarChart3, Shield,
   MapPin, Building2, CheckCircle, Clock, Zap, ArrowRight,
-  TrendingUp, Briefcase, Heart, Eye, Download, Lock
+  TrendingUp, Briefcase, Heart, Eye, Download, Lock,
+  MessageSquare, Send, Bell, Calendar, Settings, Layers
 } from 'lucide-react';
 
 const MODULE_CATEGORIES = [
@@ -68,6 +69,26 @@ const MODULE_CATEGORIES = [
       { path: '/documents', icon: <FileText size={32} />, title: "Documents", desc: "Gestion centralisée des documents", color: "#78909c" },
       { path: '/exports', icon: <Download size={32} />, title: "Import/Export", desc: "Exporter et importer données en masse", color: "#90a4ae" },
       { path: '/webhooks', icon: <Lock size={32} />, title: "Sécurité", desc: "Configuration sécurité et intégrations", color: "#a0aec0" },
+    ]
+  },
+  {
+    category: "Communication & Collaboration",
+    color: "#dc2626", // Red-600
+    items: [
+      { path: '/notifications', icon: <MessageSquare size={32} />, title: "Messages", desc: "Messagerie directe avec les PAPs et équipes", color: "#f87171", isNew: false },
+      { path: '/notifications', icon: <Bell size={32} />, title: "Alertes Système", desc: "Notifications critiques et mises à jour en temps réel", color: "#fca5a5" },
+      { path: '/rapports', icon: <FileText size={32} />, title: "Rapports Partage", desc: "Partager rapports et analyses avec stakeholders", color: "#fed7aa" },
+      { path: '/editions', icon: <Send size={32} />, title: "Broadcast", desc: "Envoi de messages massifs aux PAPs", color: "#fdcccb" },
+    ]
+  },
+  {
+    category: "Planification & Réunions",
+    color: "#2563eb", // Blue-600
+    items: [
+      { path: '/rapports', icon: <Calendar size={32} />, title: "Calendrier", desc: "Gérer réunions et événements d'équipe", color: "#60a5fa", isNew: true },
+      { path: '/backup', icon: <Users size={32} />, title: "Réunions", desc: "Planifier et suivre les réunions PAPs", color: "#93c5fd" },
+      { path: '/search', icon: <Briefcase size={32} />, title: "Agenda Équipe", desc: "Synchroniser calendriers et trouver créneaux optimaux", color: "#bfdbfe" },
+      { path: '/cartographie', icon: <Layers size={32} />, title: "Ressources", desc: "Allocation ressources et planification de projet", color: "#dbeafe" },
     ]
   }
 ];
