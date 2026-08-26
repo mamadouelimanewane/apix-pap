@@ -3,7 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, Users, FileText, DollarSign, AlertCircle,
   Settings, LogOut, Menu, X, Map, CheckCircle, MessageSquare, History,
-  Download, Upload, Edit2, Bell, BarChart3, Search, HardDrive, Webhook
+  Download, Upload, Edit2, Bell, BarChart3, Search, HardDrive, Webhook,
+  MapPin, Layers, TrendingUp, Briefcase, Hammer, Navigation, Scale
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -27,6 +28,14 @@ export default function Layout() {
     { path: '/reclamations', icon: AlertCircle, label: 'Réclamations' },
     { path: '/documents', icon: FileText, label: 'Documents' },
     { path: '/conciliation', icon: MessageSquare, label: 'Conciliation' },
+    { path: '/cartographie', icon: MapPin, label: 'Cartographie' },
+    { path: '/cadastre', icon: Layers, label: 'Cadastre' },
+    { path: '/dedommagement', icon: DollarSign, label: 'Dédommagement' },
+    { path: '/impenses', icon: TrendingUp, label: 'Impensés' },
+    { path: '/travaux', icon: Hammer, label: 'Travaux' },
+    { path: '/terrain', icon: Navigation, label: 'Terrain' },
+    { path: '/recours', icon: Scale, label: 'Recours' },
+    { path: '/compensation-kpi', icon: BarChart3, label: 'Compensation KPI' },
   ];
 
   const adminItems = [

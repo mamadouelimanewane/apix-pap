@@ -22,6 +22,14 @@ import Rapports from './pages/Rapports';
 import Search from './pages/Search';
 import Backup from './pages/Backup';
 import Webhooks from './pages/Webhooks';
+import Cartographie from './pages/Cartographie';
+import Cadastre from './pages/Cadastre';
+import Impenses from './pages/Impenses';
+import Dedommagement from './pages/Dedommagement';
+import Travaux from './pages/Travaux';
+import Terrain from './pages/Terrain';
+import Recours from './pages/Recours';
+import CompensationKPI from './pages/CompensationKPI';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -69,6 +77,14 @@ function AppRoutes() {
         <Route path="/search" element={user ? <Search /> : <Navigate to="/login" />} />
         <Route path="/backup" element={user ? <Backup /> : <Navigate to="/login" />} />
         <Route path="/webhooks" element={user ? <Webhooks /> : <Navigate to="/login" />} />
+        <Route path="/cartographie" element={user ? <Cartographie /> : <Navigate to="/login" />} />
+        <Route path="/cadastre" element={user ? <Cadastre /> : <Navigate to="/login" />} />
+        <Route path="/impenses" element={user ? <Impenses /> : <Navigate to="/login" />} />
+        <Route path="/dedommagement" element={user ? <Dedommagement /> : <Navigate to="/login" />} />
+        <Route path="/travaux" element={user ? <Travaux /> : <Navigate to="/login" />} />
+        <Route path="/terrain" element={user ? <Terrain /> : <Navigate to="/login" />} />
+        <Route path="/recours" element={user ? <Recours /> : <Navigate to="/login" />} />
+        <Route path="/compensation-kpi" element={user ? <CompensationKPI /> : <Navigate to="/login" />} />
       </Route>
 
       {/* Default redirect */}
