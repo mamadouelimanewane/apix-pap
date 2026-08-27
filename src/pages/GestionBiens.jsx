@@ -1,5 +1,16 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Plus, Trash2 } from 'lucide-react';
+import { MapPin, Plus, Trash2, X } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix default marker icon
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 export default function GestionBiens() {
   const [biens, setBiens] = useState([]);
@@ -249,16 +260,58 @@ export default function GestionBiens() {
         )}
       </div>
 
-      {/* Note map */}
-      <div className="card" style={{ marginTop: '2rem', background: '#f0f9ff', padding: '1.5rem', borderLeft: '4px solid #0284c7' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {/* Carte Interactive */}
+      <div className="card" style={{ marginTop: '2rem', padding: '1.5rem' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <MapPin size={20} style={{ color: '#0284c7' }} />
-          Carte Interactive (Leaflet)
+          Localisation des Biens (Carte Interactive)
         </h3>
-        <p style={{ color: '#0c4a6e', fontSize: '0.9rem' }}>
-          Intégration Leaflet pour afficher les biens sur une carte est en cours de développement.
-          Cela permettra de visualiser les emplacements GPS de tous les biens affectés.
-        </p>
+        {biens.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8', background: '#f8fafc', borderRadius: '8px' }}>
+            <p>Enregistrez des biens avec coordonnées GPS pour les voir sur la carte</p>
+          </div>
+        ) : (
+          <MapContainer center={[14.7167, -17.4667]} zoom={12} style={{ height: '500px', borderRadius: '8px', marginBottom: '1rem' }}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; OpenStreetMap contributors'
+            />
+            {biens.map((bien) => {
+              if (bien.gps_lat && bien.gps_lng) {
+                return (
+                  <Marker key={bien.id} position={[parseFloat(bien.gps_lat), parseFloat(bien.gps_lng)]}>
+                    <Popup>
+                      <div style={{ fontSize: '0.9rem', minWidth: '200px' }}>
+                        <div style={{ fontWeight: '600', marginBottom: '0.5rem', color: '#006B3F' }}>
+                          {bien.code_bien}
+                        </div>
+                        <div style={{ marginBottom: '0.3rem' }}>
+                          <strong>Type:</strong> {bien.type_bien}
+                        </div>
+                        <div style={{ marginBottom: '0.3rem' }}>
+                          <strong>Superficie:</strong> {bien.superficie_m2} m²
+                        </div>
+                        <div style={{ marginBottom: '0.3rem' }}>
+                          <strong>PAP:</strong> {bien.pap_nom} {bien.pap_prenom}
+                        </div>
+                        <div style={{ marginBottom: '0.3rem' }}>
+                          <strong>Montant:</strong> {bien.montant_initial ? `${(bien.montant_initial / 1000000).toFixed(1)}M FCFA` : '-'}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.5rem' }}>
+                          {bien.gps_lat}, {bien.gps_lng}
+                        </div>
+                      </div>
+                    </Popup>
+                  </Marker>
+                );
+              }
+              return null;
+            })}
+          </MapContainer>
+        )}
+        <div style={{ fontSize: '0.85rem', color: '#64748b', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+          📍 Cliquez sur les marqueurs pour voir les détails des biens | {biens.filter(b => b.gps_lat && b.gps_lng).length} biens avec coordonnées GPS
+        </div>
       </div>
     </div>
   );
