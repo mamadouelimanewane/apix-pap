@@ -1,10 +1,78 @@
 {
+  "projectName": "apix-pap-frontend",
   "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
   "outputDirectory": "dist",
+  "public": false,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "regions": ["cdg1"],
   "functions": {
     "api/**/*.js": {
       "memory": 1024,
-      "maxDuration": 30
+      "maxDuration": 60
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "VITE_APP_API_URL": "@vite_app_api_url",
+    "VITE_APP_TITLE": "@vite_app_title",
+    "VITE_DEBUG": "@vite_debug",
+    "VITE_STORAGE_PREFIX": "@vite_storage_prefix"
+  },
+  "envPrefix": "VITE_",
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "develop": false
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/health",
+      "schedule": "0 */4 * * *"
+    }
+  ]
 }
