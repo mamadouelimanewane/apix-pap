@@ -48,18 +48,5 @@
     "VITE_APP_TITLE": "@vite_app_title",
     "VITE_DEBUG": "@vite_debug",
     "VITE_STORAGE_PREFIX": "@vite_storage_prefix"
-  },
-  "envPrefix": "VITE_",
-  "git": {
-    "deploymentEnabled": {
-      "main": true,
-      "develop": false
-    }
-  },
-  "crons": [
-    {
-      "path": "/api/health",
-      "schedule": "0 */4 * * *"
-    }
-  ]
+  }
 }
