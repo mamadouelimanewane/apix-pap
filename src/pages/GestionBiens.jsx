@@ -281,7 +281,12 @@ export default function GestionBiens() {
             <p>Enregistrez des biens avec coordonnées GPS pour les voir sur la carte</p>
           </div>
         ) : (
-          <MapContainer center={[14.7167, -17.4667]} zoom={12} style={{ height: '500px', borderRadius: '8px', marginBottom: '1rem' }}>
+          <MapContainer center={[14.7167, -17.4667]} zoom={12} style={{
+            height: 'clamp(300px, 60vh, 600px)',
+            borderRadius: '8px',
+            marginBottom: '1rem',
+            width: '100%'
+          }}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; OpenStreetMap contributors'

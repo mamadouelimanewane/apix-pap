@@ -163,11 +163,14 @@ const PortalHubAPIP = () => {
               </h2>
             </div>
 
-            {/* Items Grid */}
+            {/* Items Grid - Responsive */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-              gap: '1.2rem'
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+              gap: '1.2rem',
+              '@media (max-width: 768px)': {
+                gridTemplateColumns: '1fr'
+              }
             }}>
               {category.items.map((mod, index) => (
                 <div
