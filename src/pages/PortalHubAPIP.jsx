@@ -23,6 +23,16 @@ const MODULE_CATEGORIES = [
     ]
   },
   {
+    category: "Workflows & Dossiers",
+    color: "#7c22a0", // Violet-700
+    items: [
+      { path: '/registre', icon: <Workflow size={32} />, title: "Workflow Dossier", desc: "Suivi complet du cycle de vie dossier PAP", color: "#a855f7", isNew: true },
+      { path: '/pap/:code_pap', icon: <ListCheck size={32} />, title: "Étapes Dossier", desc: "Visualiser et gérer chaque étape du processus", color: "#c084fc" },
+      { path: '/dedommagement', icon: <GitBranch size={32} />, title: "Branches Processus", desc: "Parcours alternatifs et escalades dossier", color: "#d8b4fe" },
+      { path: '/rapports', icon: <Folder size={32} />, title: "Archivage", desc: "Gérer historique et documents archivés", color: "#e9d5ff" },
+    ]
+  },
+  {
     category: "Évaluation & Dédommagement",
     color: "#7c3aed", // Purple
     items: [
@@ -90,16 +100,6 @@ const MODULE_CATEGORIES = [
       { path: '/meetings', icon: <Users size={32} />, title: "Réunions", desc: "Planifier et suivre les réunions PAPs", color: "#93c5fd" },
       { path: '/calendar', icon: <Briefcase size={32} />, title: "Agenda Équipe", desc: "Synchroniser calendriers et trouver créneaux optimaux", color: "#bfdbfe" },
       { path: '/cartographie', icon: <Layers size={32} />, title: "Ressources", desc: "Allocation ressources et planification de projet", color: "#dbeafe" },
-    ]
-  },
-  {
-    category: "Workflows & Dossiers",
-    color: "#7c22a0", // Violet-700
-    items: [
-      { path: '/registre', icon: <Workflow size={32} />, title: "Workflow Dossier", desc: "Suivi complet du cycle de vie dossier PAP", color: "#a855f7", isNew: true },
-      { path: '/pap/:code_pap', icon: <ListCheck size={32} />, title: "Étapes Dossier", desc: "Visualiser et gérer chaque étape du processus", color: "#c084fc" },
-      { path: '/dedommagement', icon: <GitBranch size={32} />, title: "Branches Processus", desc: "Parcours alternatifs et escalades dossier", color: "#d8b4fe" },
-      { path: '/rapports', icon: <Folder size={32} />, title: "Archivage", desc: "Gérer historique et documents archivés", color: "#e9d5ff" },
     ]
   },
   {
