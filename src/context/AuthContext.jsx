@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { DEMO_USERS } from '../config/roles';
 
 const AuthContext = createContext();
 
@@ -20,20 +21,19 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      // Demo mode: hardcoded users
-      const users = {
-        'admin@apix.sn': { nom: 'Administrateur', role: 'admin', password: 'password' },
-        'chef@apix.sn': { nom: 'Chef Projet', role: 'chef_projet', password: 'password' },
-        'agent@apix.sn': { nom: 'Agent Terrain', role: 'agent_terrain', password: 'password' }
-      };
-
-      const user = users[email];
+      const user = DEMO_USERS[email];
       if (!user || user.password !== password) {
         throw new Error('Identifiants incorrects');
       }
 
       const token = btoa(JSON.stringify({ email, nom: user.nom, role: user.role }));
-      const fullUserData = { email, nom: user.nom, role: user.role, token };
+      const fullUserData = {
+        email: user.email,
+        nom: user.nom,
+        role: user.role,
+        department: user.department,
+        token
+      };
       setUser(fullUserData);
       localStorage.setItem('apix_pap_user', JSON.stringify(fullUserData));
       return fullUserData;
