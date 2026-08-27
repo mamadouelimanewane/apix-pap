@@ -7,7 +7,8 @@ import {
   Users, FileText, DollarSign, AlertCircle, BarChart3, Shield,
   MapPin, Building2, CheckCircle, Clock, Zap, ArrowRight,
   TrendingUp, Briefcase, Heart, Eye, Download, Lock,
-  MessageSquare, Send, Bell, Calendar, Settings, Layers
+  MessageSquare, Send, Bell, Calendar, Settings, Layers,
+  Workflow, Image, Scan, Folder, ListCheck, GitBranch
 } from 'lucide-react';
 
 const MODULE_CATEGORIES = [
@@ -90,6 +91,26 @@ const MODULE_CATEGORIES = [
       { path: '/search', icon: <Briefcase size={32} />, title: "Agenda Équipe", desc: "Synchroniser calendriers et trouver créneaux optimaux", color: "#bfdbfe" },
       { path: '/cartographie', icon: <Layers size={32} />, title: "Ressources", desc: "Allocation ressources et planification de projet", color: "#dbeafe" },
     ]
+  },
+  {
+    category: "Workflows & Dossiers",
+    color: "#7c22a0", // Violet-700
+    items: [
+      { path: '/registre', icon: <Workflow size={32} />, title: "Workflow Dossier", desc: "Suivi complet du cycle de vie dossier PAP", color: "#a855f7", isNew: true },
+      { path: '/pap/:code_pap', icon: <ListCheck size={32} />, title: "Étapes Dossier", desc: "Visualiser et gérer chaque étape du processus", color: "#c084fc" },
+      { path: '/dedommagement', icon: <GitBranch size={32} />, title: "Branches Processus", desc: "Parcours alternatifs et escalades dossier", color: "#d8b4fe" },
+      { path: '/rapports', icon: <Folder size={32} />, title: "Archivage", desc: "Gérer historique et documents archivés", color: "#e9d5ff" },
+    ]
+  },
+  {
+    category: "Acquisition & Documents",
+    color: "#059669", // Emerald-600
+    items: [
+      { path: '/acquisition-documents', icon: <Scan size={32} />, title: "Scanner OCR", desc: "Numériser et extraire données des documents", color: "#10b981", isNew: true },
+      { path: '/documents', icon: <Image size={32} />, title: "Galerie Médias", desc: "Gérer photos et vidéos des propriétés", color: "#34d399" },
+      { path: '/risk-assessment', icon: <AlertCircle size={32} />, title: "Validation", desc: "Vérifier conformité et qualité documents", color: "#6ee7b7" },
+      { path: '/editions', icon: <FileText size={32} />, title: "Templates", desc: "Modèles documents et certificats", color: "#a7f3d0" },
+    ]
   }
 ];
 
@@ -117,10 +138,10 @@ const PortalHubAPIP = () => {
         <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '150px', height: '150px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }}></div>
         <div style={{ position: 'absolute', bottom: '-40px', right: '50px', width: '100px', height: '100px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '50%' }}></div>
 
-        <h1 style={{ fontSize: '2.8rem', fontWeight: '800', margin: 0, position: 'relative', zIndex: 10 }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, position: 'relative', zIndex: 10 }}>
           Bienvenue au Hub APIX-PAP
         </h1>
-        <p style={{ fontSize: '1.3rem', color: '#e0e7ff', marginTop: '0.5rem', position: 'relative', zIndex: 10 }}>
+        <p style={{ fontSize: '1rem', color: '#e0e7ff', marginTop: '0.5rem', position: 'relative', zIndex: 10 }}>
           Plateforme complète de gestion des Personnes Affectées par les Projets au Sénégal.
         </p>
       </div>
@@ -145,8 +166,8 @@ const PortalHubAPIP = () => {
             {/* Items Grid */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              gap: '1.5rem'
+              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gap: '1.2rem'
             }}>
               {category.items.map((mod, index) => (
                 <div
@@ -154,8 +175,8 @@ const PortalHubAPIP = () => {
                   onClick={() => navigate(mod.path)}
                   style={{
                     background: 'white',
-                    borderRadius: '16px',
-                    padding: '2rem',
+                    borderRadius: '14px',
+                    padding: '1.25rem',
                     boxShadow: `0 4px 0 ${mod.color}30, 0 4px 6px -1px rgba(0, 0, 0, 0.05)`,
                     border: `1px solid ${mod.color}40`,
                     cursor: 'pointer',
@@ -197,32 +218,32 @@ const PortalHubAPIP = () => {
 
                   {/* Icon Box */}
                   <div style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '12px',
+                    width: '50px',
+                    height: '50px',
+                    borderRadius: '10px',
                     background: `${mod.color}15`,
                     color: mod.color,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginBottom: '1.5rem'
+                    marginBottom: '1rem'
                   }}>
                     {mod.icon}
                   </div>
 
                   {/* Title */}
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: '800', marginBottom: '0.5rem', color: '#0f172a' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '0.4rem', color: '#0f172a' }}>
                     {mod.title}
                   </h3>
 
                   {/* Description */}
-                  <p style={{ fontSize: '1.05rem', color: '#475569', lineHeight: '1.5', flex: 1 }}>
+                  <p style={{ fontSize: '0.85rem', color: '#475569', lineHeight: '1.4', flex: 1 }}>
                     {mod.desc}
                   </p>
 
                   {/* CTA */}
                   <div style={{
-                    marginTop: '1.5rem',
+                    marginTop: '1rem',
                     display: 'flex',
                     alignItems: 'center',
                     color: mod.color,
