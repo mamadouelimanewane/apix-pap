@@ -83,6 +83,16 @@ const MODULE_CATEGORIES = [
     ]
   },
   {
+    category: "Acquisition & Documents",
+    color: "#059669", // Emerald-600
+    items: [
+      { path: '/acquisition-documents', icon: <Scan size={32} />, title: "Scanner OCR", desc: "Numériser et extraire données des documents", color: "#10b981", isNew: true },
+      { path: '/documents', icon: <Image size={32} />, title: "Galerie Médias", desc: "Gérer photos et vidéos des propriétés", color: "#34d399" },
+      { path: '/risk-assessment', icon: <AlertCircle size={32} />, title: "Validation", desc: "Vérifier conformité et qualité documents", color: "#6ee7b7" },
+      { path: '/editions', icon: <FileText size={32} />, title: "Templates", desc: "Modèles documents et certificats", color: "#a7f3d0" },
+    ]
+  },
+  {
     category: "Analytics & Intelligence",
     color: "#0369a1", // Cyan
     items: [
@@ -100,16 +110,6 @@ const MODULE_CATEGORIES = [
       { path: '/documents', icon: <FileText size={32} />, title: "Documents", desc: "Gestion centralisée des documents", color: "#78909c" },
       { path: '/exports', icon: <Download size={32} />, title: "Import/Export", desc: "Exporter et importer données en masse", color: "#90a4ae" },
       { path: '/webhooks', icon: <Lock size={32} />, title: "Sécurité", desc: "Configuration sécurité et intégrations", color: "#a0aec0" },
-    ]
-  },
-  {
-    category: "Acquisition & Documents",
-    color: "#059669", // Emerald-600
-    items: [
-      { path: '/acquisition-documents', icon: <Scan size={32} />, title: "Scanner OCR", desc: "Numériser et extraire données des documents", color: "#10b981", isNew: true },
-      { path: '/documents', icon: <Image size={32} />, title: "Galerie Médias", desc: "Gérer photos et vidéos des propriétés", color: "#34d399" },
-      { path: '/risk-assessment', icon: <AlertCircle size={32} />, title: "Validation", desc: "Vérifier conformité et qualité documents", color: "#6ee7b7" },
-      { path: '/editions', icon: <FileText size={32} />, title: "Templates", desc: "Modèles documents et certificats", color: "#a7f3d0" },
     ]
   }
 ];
