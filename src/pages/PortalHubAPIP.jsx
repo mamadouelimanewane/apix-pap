@@ -63,26 +63,6 @@ const MODULE_CATEGORIES = [
     ]
   },
   {
-    category: "Analytics & Intelligence",
-    color: "#0369a1", // Cyan
-    items: [
-      { path: '/dashboard-metier', icon: <BarChart3 size={32} />, title: "Dashboard Métier", desc: "Vue 6 phases avec KPIs temps réel", color: "#06b6d4", isNew: true },
-      { path: '/advanced-features', icon: <Zap size={32} />, title: "Advanced Analytics", desc: "BI avancée + ML predictions + rapports", color: "#22d3ee" },
-      { path: '/search', icon: <Eye size={32} />, title: "Recherche Avancée", desc: "Recherche globale avec filtres et tendances", color: "#67e8f9" },
-      { path: '/notifications', icon: <Heart size={32} />, title: "Notifications", desc: "Centre notifications avec alertes intelligentes", color: "#a5f3fc" },
-    ]
-  },
-  {
-    category: "Outils & Conformité",
-    color: "#475569", // Slate
-    items: [
-      { path: '/audit', icon: <Shield size={32} />, title: "Audit Trail", desc: "Compliance audit et intégrité blockchain", color: "#64748b", isNew: false },
-      { path: '/documents', icon: <FileText size={32} />, title: "Documents", desc: "Gestion centralisée des documents", color: "#78909c" },
-      { path: '/exports', icon: <Download size={32} />, title: "Import/Export", desc: "Exporter et importer données en masse", color: "#90a4ae" },
-      { path: '/webhooks', icon: <Lock size={32} />, title: "Sécurité", desc: "Configuration sécurité et intégrations", color: "#a0aec0" },
-    ]
-  },
-  {
     category: "Communication & Collaboration",
     color: "#dc2626", // Red-600
     items: [
@@ -100,6 +80,26 @@ const MODULE_CATEGORIES = [
       { path: '/meetings', icon: <Users size={32} />, title: "Réunions", desc: "Planifier et suivre les réunions PAPs", color: "#93c5fd" },
       { path: '/calendar', icon: <Briefcase size={32} />, title: "Agenda Équipe", desc: "Synchroniser calendriers et trouver créneaux optimaux", color: "#bfdbfe" },
       { path: '/cartographie', icon: <Layers size={32} />, title: "Ressources", desc: "Allocation ressources et planification de projet", color: "#dbeafe" },
+    ]
+  },
+  {
+    category: "Analytics & Intelligence",
+    color: "#0369a1", // Cyan
+    items: [
+      { path: '/dashboard-metier', icon: <BarChart3 size={32} />, title: "Dashboard Métier", desc: "Vue 6 phases avec KPIs temps réel", color: "#06b6d4", isNew: true },
+      { path: '/advanced-features', icon: <Zap size={32} />, title: "Advanced Analytics", desc: "BI avancée + ML predictions + rapports", color: "#22d3ee" },
+      { path: '/search', icon: <Eye size={32} />, title: "Recherche Avancée", desc: "Recherche globale avec filtres et tendances", color: "#67e8f9" },
+      { path: '/notifications', icon: <Heart size={32} />, title: "Notifications", desc: "Centre notifications avec alertes intelligentes", color: "#a5f3fc" },
+    ]
+  },
+  {
+    category: "Outils & Conformité",
+    color: "#475569", // Slate
+    items: [
+      { path: '/audit', icon: <Shield size={32} />, title: "Audit Trail", desc: "Compliance audit et intégrité blockchain", color: "#64748b", isNew: false },
+      { path: '/documents', icon: <FileText size={32} />, title: "Documents", desc: "Gestion centralisée des documents", color: "#78909c" },
+      { path: '/exports', icon: <Download size={32} />, title: "Import/Export", desc: "Exporter et importer données en masse", color: "#90a4ae" },
+      { path: '/webhooks', icon: <Lock size={32} />, title: "Sécurité", desc: "Configuration sécurité et intégrations", color: "#a0aec0" },
     ]
   },
   {
