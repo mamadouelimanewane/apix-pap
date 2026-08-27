@@ -45,6 +45,10 @@ import PortalHome from './pages/PortalHome';
 import DashboardMetierRedesigned from './pages/DashboardMetierRedesigned';
 // NEW: Portal Hub APIX-PAP (Like apix-phi)
 import PortalHubAPIP from './pages/PortalHubAPIP';
+// NEW: Communications & Planning
+import Communications from './pages/Communications';
+import Meetings from './pages/Meetings';
+import Calendar from './pages/Calendar';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -125,6 +129,11 @@ function AppRoutes() {
 
         {/* NEW: Advanced Features Routes */}
         <Route path="/advanced-features" element={user ? <AdvancedFeatures /> : <Navigate to="/login" />} />
+
+        {/* NEW: Communications & Planning Routes */}
+        <Route path="/communications" element={user ? <Communications /> : <Navigate to="/login" />} />
+        <Route path="/meetings" element={user ? <Meetings /> : <Navigate to="/login" />} />
+        <Route path="/calendar" element={user ? <Calendar /> : <Navigate to="/login" />} />
       </Route>
 
       {/* Default redirect */}
