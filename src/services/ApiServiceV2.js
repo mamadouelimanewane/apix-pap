@@ -82,6 +82,36 @@ class ApiServiceV2 {
     return this.makeRequest(`/pap/search?q=${encodeURIComponent(query)}`);
   }
 
+  async getPAPStats() {
+    return this.makeRequest('/pap/stats');
+  }
+
+  // ============= Authentication =============
+  async login(email, password) {
+    const result = await this.makeRequest('/auth/login', {
+      method: 'POST',
+      data: { email, password },
+      useCache: false
+    });
+
+    if (result.token) {
+      this.token = result.token;
+      localStorage.setItem('jwtToken', result.token);
+    }
+
+    return result;
+  }
+
+  async getProfile() {
+    return this.makeRequest('/auth/profile');
+  }
+
+  async logout() {
+    this.token = null;
+    localStorage.removeItem('jwtToken');
+    return this.makeRequest('/auth/logout', { method: 'POST' });
+  }
+
   // ============= Biens (Properties) =============
   async getBiens(papCode, filters = {}) {
     const params = new URLSearchParams(filters);
@@ -100,92 +130,217 @@ class ApiServiceV2 {
     return this.makeRequest(`/bien/${bienCode}`, { method: 'PUT', data });
   }
 
-  // ============= Evaluations =============
-  async createEvaluation(bienCode, data) {
-    return this.makeRequest(`/evaluation/create/${bienCode}`, { method: 'POST', data });
+  async deleteBien(bienCode) {
+    return this.makeRequest(`/bien/${bienCode}`, { method: 'DELETE' });
   }
 
-  async getEvaluations(filters = {}) {
+  async getBienStats(papCode) {
+    return this.makeRequest(`/bien/stats/${papCode}`);
+  }
+
+  // ============= Evaluations =============
+  async getEvaluationsByPAP(papCode, filters = {}) {
     const params = new URLSearchParams(filters);
-    return this.makeRequest(`/evaluation/list?${params}`);
+    return this.makeRequest(`/evaluation/list/${papCode}?${params}`);
+  }
+
+  async getEvaluationById(evaluationCode) {
+    return this.makeRequest(`/evaluation/${evaluationCode}`);
+  }
+
+  async createEvaluation(papCode, bienCode, data) {
+    return this.makeRequest(`/evaluation/create/${papCode}/${bienCode}`, { method: 'POST', data });
+  }
+
+  async approveEvaluation(evaluationCode, data = {}) {
+    return this.makeRequest(`/evaluation/approve/${evaluationCode}`, { method: 'POST', data });
+  }
+
+  async rejectEvaluation(evaluationCode, data = {}) {
+    return this.makeRequest(`/evaluation/reject/${evaluationCode}`, { method: 'POST', data });
+  }
+
+  async getEvaluationStats(papCode) {
+    return this.makeRequest(`/evaluation/stats/${papCode}`);
   }
 
   // ============= Compensation =============
-  async createCompensation(bienCode, data) {
-    return this.makeRequest(`/compensation/submit/${bienCode}`, { method: 'POST', data });
-  }
-
-  async reviewCompensation(dossierId, review) {
-    return this.makeRequest(`/compensation/review/${dossierId}`, { method: 'POST', data: review });
-  }
-
-  async approveCompensation(dossierId, approval) {
-    return this.makeRequest(`/compensation/approve/${dossierId}`, { method: 'POST', data: approval });
-  }
-
-  async getCompensations(filters = {}) {
+  async getCompensationsByPAP(papCode, filters = {}) {
     const params = new URLSearchParams(filters);
-    return this.makeRequest(`/compensation/list?${params}`);
+    return this.makeRequest(`/compensation/list/${papCode}?${params}`);
+  }
+
+  async getCompensationById(compensationCode) {
+    return this.makeRequest(`/compensation/${compensationCode}`);
+  }
+
+  async proposeCompensation(papCode, bienCode, data) {
+    return this.makeRequest(`/compensation/propose/${papCode}/${bienCode}`, { method: 'POST', data });
+  }
+
+  async reviewCompensation(compensationCode, data) {
+    return this.makeRequest(`/compensation/review/${compensationCode}`, { method: 'POST', data });
+  }
+
+  async approveCompensation(compensationCode, data) {
+    return this.makeRequest(`/compensation/approve/${compensationCode}`, { method: 'POST', data });
+  }
+
+  async rejectCompensation(compensationCode, data = {}) {
+    return this.makeRequest(`/compensation/reject/${compensationCode}`, { method: 'POST', data });
+  }
+
+  async getCompensationStats(papCode) {
+    return this.makeRequest(`/compensation/stats/${papCode}`);
   }
 
   // ============= Payments =============
-  async initiatePayment(compensationId, data) {
-    return this.makeRequest(`/payment/initiate/${compensationId}`, { method: 'POST', data });
-  }
-
-  async confirmPayment(paiementId, data) {
-    return this.makeRequest(`/payment/confirm/${paiementId}`, { method: 'POST', data });
-  }
-
-  async getPayments(filters = {}) {
+  async getPaymentsByPAP(papCode, filters = {}) {
     const params = new URLSearchParams(filters);
-    return this.makeRequest(`/payment/list?${params}`);
+    return this.makeRequest(`/payment/list/${papCode}?${params}`);
+  }
+
+  async getPaymentById(paymentCode) {
+    return this.makeRequest(`/payment/${paymentCode}`);
+  }
+
+  async initiatePayment(papCode, compensationCode, data) {
+    return this.makeRequest(`/payment/initiate/${papCode}/${compensationCode}`, { method: 'POST', data });
+  }
+
+  async confirmPayment(paymentCode, data = {}) {
+    return this.makeRequest(`/payment/confirm/${paymentCode}`, { method: 'POST', data });
+  }
+
+  async completePayment(paymentCode, data = {}) {
+    return this.makeRequest(`/payment/complete/${paymentCode}`, { method: 'POST', data });
+  }
+
+  async failPayment(paymentCode, data = {}) {
+    return this.makeRequest(`/payment/fail/${paymentCode}`, { method: 'POST', data });
+  }
+
+  async getPaymentStats(papCode) {
+    return this.makeRequest(`/payment/stats/${papCode}`);
   }
 
   // ============= Reclamations =============
+  async getReclamationsByPAP(papCode, filters = {}) {
+    const params = new URLSearchParams(filters);
+    return this.makeRequest(`/reclamation/list/${papCode}?${params}`);
+  }
+
+  async getReclamationById(reclamationCode) {
+    return this.makeRequest(`/reclamation/${reclamationCode}`);
+  }
+
   async createReclamation(papCode, data) {
     return this.makeRequest(`/reclamation/create/${papCode}`, { method: 'POST', data });
   }
 
-  async getReclamations(filters = {}) {
-    const params = new URLSearchParams(filters);
-    return this.makeRequest(`/reclamation/list?${params}`);
+  async reviewReclamation(reclamationCode, data = {}) {
+    return this.makeRequest(`/reclamation/review/${reclamationCode}`, { method: 'POST', data });
   }
 
-  async treatReclamation(reclamationId, data) {
-    return this.makeRequest(`/reclamation/treat/${reclamationId}`, { method: 'POST', data });
+  async resolveReclamation(reclamationCode, data) {
+    return this.makeRequest(`/reclamation/resolve/${reclamationCode}`, { method: 'POST', data });
+  }
+
+  async rejectReclamation(reclamationCode, data = {}) {
+    return this.makeRequest(`/reclamation/reject/${reclamationCode}`, { method: 'POST', data });
+  }
+
+  async getReclamationStats(papCode) {
+    return this.makeRequest(`/reclamation/stats/${papCode}`);
   }
 
   // ============= Communications =============
-  async getMessages(papCode) {
-    return this.makeRequest(`/communications/messages/${papCode}`);
+  async getMessages(papCode, filters = {}) {
+    const params = new URLSearchParams(filters);
+    return this.makeRequest(`/communication/messages/${papCode}?${params}`);
+  }
+
+  async getMessageById(messageCode) {
+    return this.makeRequest(`/communication/${messageCode}`);
   }
 
   async sendMessage(papCode, data) {
-    return this.makeRequest(`/communications/message/${papCode}`, { method: 'POST', data });
+    return this.makeRequest(`/communication/send/${papCode}`, { method: 'POST', data });
   }
 
-  async getNotifications() {
-    return this.makeRequest('/communications/notifications');
+  async markMessageAsRead(messageCode) {
+    return this.makeRequest(`/communication/read/${messageCode}`, { method: 'POST' });
   }
 
-  // ============= Calendrier =============
-  async getMeetings(filters = {}) {
+  async deleteMessage(messageCode) {
+    return this.makeRequest(`/communication/${messageCode}`, { method: 'DELETE' });
+  }
+
+  async getNotifications(papCode, filters = {}) {
     const params = new URLSearchParams(filters);
-    return this.makeRequest(`/calendar/meetings?${params}`);
+    return this.makeRequest(`/communication/notifications/${papCode}?${params}`);
   }
 
-  async createMeeting(data) {
-    return this.makeRequest('/calendar/meetings', { method: 'POST', data });
+  async createNotification(papCode, data) {
+    return this.makeRequest(`/communication/notify/${papCode}`, { method: 'POST', data });
+  }
+
+  async getCommunicationStats(papCode) {
+    return this.makeRequest(`/communication/stats/${papCode}`);
+  }
+
+  // ============= Workflow =============
+  async getWorkflowByPAP(papCode) {
+    return this.makeRequest(`/workflow/${papCode}`);
+  }
+
+  async startPhase(papCode, phase, data = {}) {
+    return this.makeRequest(`/workflow/start/${papCode}/${phase}`, { method: 'POST', data });
+  }
+
+  async completePhase(papCode, phase, data = {}) {
+    return this.makeRequest(`/workflow/complete/${papCode}/${phase}`, { method: 'POST', data });
+  }
+
+  async rejectPhase(papCode, phase, data = {}) {
+    return this.makeRequest(`/workflow/reject/${papCode}/${phase}`, { method: 'POST', data });
+  }
+
+  async getWorkflowHistory(papCode) {
+    return this.makeRequest(`/workflow/history/${papCode}`);
+  }
+
+  async getWorkflowStats() {
+    return this.makeRequest('/workflow/stats/all');
   }
 
   // ============= Analytics & Reports =============
-  async getAnalytics(type, period = '30d') {
-    return this.makeRequest(`/analytics/${type}?period=${period}`);
+  async getDashboard() {
+    return this.makeRequest('/analytics/dashboard');
   }
 
-  async generateReport(type, options = {}) {
-    return this.makeRequest(`/reports/generate/${type}`, { method: 'POST', data: options });
+  async getPhaseProgress() {
+    return this.makeRequest('/analytics/phase-progress');
+  }
+
+  async getZoneReport() {
+    return this.makeRequest('/analytics/zone-report');
+  }
+
+  async getSectorReport() {
+    return this.makeRequest('/analytics/sector-report');
+  }
+
+  async getPropertyReport() {
+    return this.makeRequest('/analytics/property-report');
+  }
+
+  async getTrendData(period = '30') {
+    return this.makeRequest(`/analytics/trend-data?period=${period}`);
+  }
+
+  async getAlerts() {
+    return this.makeRequest('/analytics/alerts');
   }
 
   clearCache() {
@@ -316,6 +471,156 @@ export const useUpdatePAP = () => {
   }, []);
 
   return { update, loading, error };
+};
+
+// Analytics & Dashboard Hooks
+export const useDashboard = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        setLoading(true);
+        const result = await apiService.getDashboard();
+        setData(result?.data || null);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
+
+  return { data, loading, error };
+};
+
+// Workflow Hooks
+export const useWorkflow = (papCode) => {
+  const [workflow, setWorkflow] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!papCode) return;
+
+    const fetchWorkflow = async () => {
+      try {
+        setLoading(true);
+        const result = await apiService.getWorkflowByPAP(papCode);
+        setWorkflow(result?.data || null);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWorkflow();
+  }, [papCode]);
+
+  return { workflow, loading, error };
+};
+
+// Communication Hooks
+export const useMessages = (papCode, filters = {}) => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!papCode) return;
+
+    const fetchMessages = async () => {
+      try {
+        setLoading(true);
+        const result = await apiService.getMessages(papCode, filters);
+        setMessages(result?.data || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMessages();
+  }, [papCode, JSON.stringify(filters)]);
+
+  return { messages, loading, error };
+};
+
+export const useSendMessage = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const send = useCallback(async (papCode, data) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await apiService.sendMessage(papCode, data);
+      apiService.clearCache();
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { send, loading, error };
+};
+
+// Reclamation Hooks
+export const useReclamations = (papCode, filters = {}) => {
+  const [reclamations, setReclamations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!papCode) return;
+
+    const fetchReclamations = async () => {
+      try {
+        setLoading(true);
+        const result = await apiService.getReclamationsByPAP(papCode, filters);
+        setReclamations(result?.data || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReclamations();
+  }, [papCode, JSON.stringify(filters)]);
+
+  return { reclamations, loading, error };
+};
+
+export const useCreateReclamation = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const create = useCallback(async (papCode, data) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await apiService.createReclamation(papCode, data);
+      apiService.clearCache();
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { create, loading, error };
 };
 
 export default apiService;
