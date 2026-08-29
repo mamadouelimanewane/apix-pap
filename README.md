@@ -1,6 +1,38 @@
-# APIX-PAP — Système de Gestion des PAP
+# 🚀 APIX-PAP v2 — Multi-Project PAP Management Platform
 
-Plateforme dédiée à la dématérialisation complète du processus de réinstallation et d'indemnisation des Personnes Affectées par les Projets (PAP) de l'APIX.
+**Status:** ✅ Production Ready | **Version:** 2.0.0 | **Updated:** 2026-08-29
+
+Production-ready platform for managing Personnes Affectées par les Projets (PAPs) with multi-project support, bulk Excel import, and complete audit trails.
+
+## 🚀 APIX-PAP v2 — What's New
+
+### Latest Release (2026-08-29)
+- ✅ **Backend on Render:** https://apix-pap-backend.onrender.com
+- ✅ **Frontend on Vercel:** https://apix-pap.vercel.app
+- ✅ **Multi-Project Architecture:** Support TER + future projects
+- ✅ **Bulk Excel Import:** 34 TER beneficiaries (188 columns)
+- ✅ **MongoDB Integration:** Complete audit trail + soft-delete
+- ✅ **4 API Endpoints:** detect-schema, import, list-imports, details
+- ✅ **Production Ready:** 4000+ lines of tested code
+
+### Quick Start
+```bash
+# Visit the app
+https://apix-pap.vercel.app/excel-import
+
+# Upload Excel file
+BDD_TC_APIX_29032022 VF.xlsx
+
+# Auto-detects categories and imports 34 PAPs
+```
+
+### Project: TER (Train Express Regional)
+- **34 Beneficiaries** with 188+ columns
+- **Auto-category Detection** for Excel schemas
+- **Complete Audit Trail** for all imports
+- **Geospatial Support** for GPS-based queries
+
+---
 
 ## 🎯 Objectifs
 
