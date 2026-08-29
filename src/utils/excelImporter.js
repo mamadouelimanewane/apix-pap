@@ -43,28 +43,98 @@ export async function parseExcelFile(file) {
 
 /**
  * Map Excel columns to APIX-PAP fields
+ * Supports TER project with ALL 59 columns
  * @param {Array} excelData - Raw Excel data
- * @param {Object} mapping - Column mapping
- * @returns {Array} Formatted PAP data
+ * @param {Object} mapping - Column mapping (optional)
+ * @returns {Object} Formatted PAP data with all fields
  */
 export function mapExcelToAPIP(excelData, mapping = {}) {
-  // Default mapping (adjust based on actual Excel structure)
+  // TER Mapping: Excel columns → MongoDB PAP fields
   const defaultMapping = {
-    'Code PAP': 'code_pap',
-    'Nom': 'nom',
-    'Prénom': 'prenom',
-    'Email': 'email',
-    'Téléphone': 'telephone',
-    'Adresse': 'adresse',
-    'Type de bien': 'type_bien',
-    'Superficie': 'superficie_m2',
-    'Localisation': 'localisation',
-    'Latitude': 'gps_lat',
-    'Longitude': 'gps_lng',
-    'Montant Initial': 'montant_initial',
-    'Statut': 'statut',
-    'Phase': 'phase',
-    'Date Création': 'date_creation'
+    // Identifiant & Personne
+    'CODE PAP': 'code_pap',
+    'Prénom de la PAP': 'prenom',
+    'Nom de la PAP': 'nom',
+    'Sexe': 'sexe',
+    'Nationalité': 'nationalite',
+
+    // Localisation
+    'Region': 'region',
+    'Département': 'departement',
+    'Arrondissement': 'arrondissement',
+    'Commune': 'commune',
+    'Localite': 'localite',
+    'DR': 'dr',
+
+    // GPS (UTM format: GPSX, GPSY, GPS Z)
+    'GPSX': 'gps_x',
+    'GPSY': 'gps_y',
+    'GPS Z': 'gps_z',
+
+    // Place d'affaires
+    'Catégorie': 'categorie',
+    'Statut de PA': 'statut_pa',
+    'Type de place d\'affaires': 'type_place',
+    'Nb bien impacté': 'nb_bien_impacte',
+    'Type de PA': 'type_pa',
+    'Statut juridique de la place d\'affaires': 'statut_juridique',
+    'Secteur d\'activité': 'secteur_activite',
+
+    // Revenus & Activité
+    'Chiffre d\'affaires 2019': 'ca_2019',
+    'Revenu mensuel': 'revenu_mensuel',
+    'Perte de revenus de la place d\'affaires': 'perte_revenus',
+    'Appui perte de revenus': 'appui_perte_revenus',
+    'Frais de déplacement': 'frais_deplacement',
+    'Loyer mensuel': 'loyer_mensuel',
+    'Appui à la réinstallation': 'appui_reinstallation',
+
+    // Propriété & Contrats
+    'Existence d\'un contrat de location': 'contrat_location',
+    'Contrat enregistré aux domaines': 'contrat_enregistre',
+
+    // Superficies
+    'Superficie totale': 'superficie_totale',
+    'Surface affectée': 'surface_affectee',
+    'Pertes de terres': 'perte_terres',
+
+    // Clôtures
+    'Perimètre cloture Totale': 'perimetre_clot_total',
+    'Perimètre cloture impactée': 'perimetre_clot_impactee',
+    'Nature de la cloture': 'nature_cloture',
+    'Pertes de clôture': 'perte_cloture',
+
+    // Arbres fruitiers
+    'Perte de pied jeune': 'perte_pied_jeune',
+    'Perte de pied mature': 'perte_pied_mature',
+    'Total pertes d\'arbres fruitier 1': 'total_arbres_fruitier_1',
+    'Perte de pied jeune_1': 'perte_pied_jeune_1',
+    'Perte de pied mature_1': 'perte_pied_mature_1',
+    'Total pertes d\'arbres fruitier 2': 'total_arbres_fruitier_2',
+    'Perte de pied jeune_2': 'perte_pied_jeune_2',
+    'Perte de pied mature_2': 'perte_pied_mature_2',
+    'Total pertes d\'arbres fruitier 3': 'total_arbres_fruitier_3',
+    'Perte Total d\'arbres fruitier': 'perte_total_arbres_fruitier',
+
+    // Arbres forestiers
+    'Pertes de Pieds arbre forestiere 1': 'perte_pieds_arbre_forest_1',
+    'Pertes total d\'espèces forestières': 'perte_total_esp_forestieres',
+
+    // Équipements & Bâtiments
+    'Perte Equipement 1': 'perte_equipement_1',
+    'Perte Equipement 2': 'perte_equipement_2',
+    'Perte Equipement 3': 'perte_equipement_3',
+    'Total Equipement': 'total_equipement',
+    'Nombre de bâtiment': 'nombre_batiment',
+    'Perte total batiment': 'perte_total_batiment',
+
+    // Évaluation & Indemnisation
+    'Evaluation globale': 'evaluation_globale',
+    'Préférences indemnisation': 'preferences_indemnisation',
+
+    // Observations
+    'Observations': 'observations',
+    'Observations_1': 'observations_1'
   };
 
   const finalMapping = { ...defaultMapping, ...mapping };
@@ -76,27 +146,51 @@ export function mapExcelToAPIP(excelData, mapping = {}) {
       const formattedRow = {};
       let hasData = false;
 
+      // Process mapped columns
       Object.entries(finalMapping).forEach(([excelCol, apixField]) => {
-        if (row[excelCol] !== undefined && row[excelCol] !== null && row[excelCol] !== '') {
-          // Type conversion
-          if (apixField.includes('montant') || apixField.includes('superficie')) {
-            formattedRow[apixField] = Number(row[excelCol]);
-          } else if (apixField.includes('gps')) {
-            formattedRow[apixField] = parseFloat(row[excelCol]);
+        const value = row[excelCol];
+
+        if (value !== undefined && value !== null && value !== '') {
+          // Smart type conversion
+          if (['gps_x', 'gps_y', 'gps_z'].includes(apixField) ||
+              apixField.includes('montant') ||
+              apixField.includes('perte') ||
+              apixField.includes('superficie') ||
+              apixField.includes('surface') ||
+              apixField.includes('perimetre') ||
+              apixField.includes('pied') ||
+              apixField.includes('arbres') ||
+              apixField.includes('equipement') ||
+              apixField.includes('batiment') ||
+              apixField.includes('ca_') ||
+              apixField.includes('revenu') ||
+              apixField.includes('loyer') ||
+              apixField.includes('frais') ||
+              apixField.includes('evaluation')) {
+            formattedRow[apixField] = Number(value);
           } else if (apixField.includes('date')) {
-            formattedRow[apixField] = new Date(row[excelCol]);
+            formattedRow[apixField] = new Date(value);
           } else {
-            formattedRow[apixField] = String(row[excelCol]).trim();
+            formattedRow[apixField] = String(value).trim();
           }
           hasData = true;
         }
       });
 
-      if (hasData) {
-        // Auto-generate code if missing
-        if (!formattedRow.code_pap) {
-          formattedRow.code_pap = `PAP-${String(Date.now()).slice(-6)}`;
+      // Add all unmapped columns as additional_data
+      const mappedKeys = Object.keys(finalMapping);
+      const additionalData = {};
+      Object.entries(row).forEach(([key, value]) => {
+        if (!mappedKeys.includes(key) && value && !key.startsWith('__EMPTY')) {
+          additionalData[key] = value;
         }
+      });
+
+      if (Object.keys(additionalData).length > 0) {
+        formattedRow.additional_data = additionalData;
+      }
+
+      if (hasData) {
         formattedData.push(formattedRow);
       }
     } catch (error) {
@@ -108,9 +202,9 @@ export function mapExcelToAPIP(excelData, mapping = {}) {
 }
 
 /**
- * Validate PAP data before import
+ * Validate PAP data before import (TER format)
  * @param {Array} data - PAP data to validate
- * @returns {Object} Validation result
+ * @returns {Object} Validation result with TER-specific rules
  */
 export function validatePAPData(data) {
   const errors = [];
@@ -118,25 +212,65 @@ export function validatePAPData(data) {
   let validCount = 0;
 
   data.forEach((pap, index) => {
-    // Required fields
-    if (!pap.nom) errors.push(`Row ${index + 1}: Nom requis`);
-    if (!pap.prenom) errors.push(`Row ${index + 1}: Prénom requis`);
-    if (!pap.adresse) warnings.push(`Row ${index + 1}: Adresse manquante`);
+    const rowNum = index + 1;
+    let rowErrors = [];
 
-    // Email validation
-    if (pap.email && !pap.email.includes('@')) {
-      warnings.push(`Row ${index + 1}: Email invalide`);
+    // REQUIRED FIELDS (TER project)
+    if (!pap.code_pap) rowErrors.push(`CODE PAP requis`);
+    if (!pap.nom) rowErrors.push(`Nom de la PAP requis`);
+    if (!pap.prenom) rowErrors.push(`Prénom de la PAP requis`);
+    if (!pap.region) warnings.push(`Row ${rowNum}: Région manquante`);
+
+    // GPS VALIDATION (UTM format: positive numbers)
+    if (pap.gps_x !== undefined && pap.gps_x !== null) {
+      if (typeof pap.gps_x !== 'number' || pap.gps_x < 0) {
+        rowErrors.push(`GPS X invalide (${pap.gps_x})`);
+      }
+    } else {
+      warnings.push(`Row ${rowNum}: GPS X manquant`);
     }
 
-    // GPS validation (if present)
-    if (pap.gps_lat && (pap.gps_lat < -90 || pap.gps_lat > 90)) {
-      errors.push(`Row ${index + 1}: Latitude invalide (${pap.gps_lat})`);
-    }
-    if (pap.gps_lng && (pap.gps_lng < -180 || pap.gps_lng > 180)) {
-      errors.push(`Row ${index + 1}: Longitude invalide (${pap.gps_lng})`);
+    if (pap.gps_y !== undefined && pap.gps_y !== null) {
+      if (typeof pap.gps_y !== 'number' || pap.gps_y < 0) {
+        rowErrors.push(`GPS Y invalide (${pap.gps_y})`);
+      }
+    } else {
+      warnings.push(`Row ${rowNum}: GPS Y manquant`);
     }
 
-    if (errors.filter(e => e.startsWith(`Row ${index + 1}`)).length === 0) {
+    // SUPERFICIE VALIDATION (positive numbers)
+    if (pap.superficie_totale !== undefined && pap.superficie_totale !== null) {
+      if (typeof pap.superficie_totale !== 'number' || pap.superficie_totale <= 0) {
+        rowErrors.push(`Superficie totale invalide (${pap.superficie_totale})`);
+      }
+    }
+
+    // MONTANT VALIDATION (positive if present)
+    if (pap.evaluation_globale !== undefined && pap.evaluation_globale !== null) {
+      if (typeof pap.evaluation_globale !== 'number' || pap.evaluation_globale < 0) {
+        rowErrors.push(`Evaluation globale invalide (${pap.evaluation_globale})`);
+      }
+    }
+
+    // CATÉGORIE VALIDATION
+    const validCategories = ['EXPLOITANT PA', 'PROPRIETAIRE', 'LOCATAIRE', 'AUTRE'];
+    if (pap.categorie && !validCategories.includes(pap.categorie.toUpperCase())) {
+      warnings.push(`Row ${rowNum}: Catégorie inconnue (${pap.categorie})`);
+    }
+
+    // WARNINGS pour données potentiellement incomplètes
+    if (!pap.sexe) warnings.push(`Row ${rowNum}: Sexe manquant`);
+    if (!pap.secteur_activite) warnings.push(`Row ${rowNum}: Secteur d'activité manquant`);
+    if (!pap.statut_pa && pap.categorie === 'EXPLOITANT PA') {
+      warnings.push(`Row ${rowNum}: Statut PA manquant pour exploitant`);
+    }
+
+    // Ajouter les erreurs row-specific
+    rowErrors.forEach(err => {
+      errors.push(`Row ${rowNum}: ${err}`);
+    });
+
+    if (rowErrors.length === 0) {
       validCount++;
     }
   });
